@@ -13,19 +13,13 @@ function Login() {
     const theme = useTheme()
 
     const onSubmit = async (data: any) => {
-
         await signIn(data.email, data.password).then((result) => {
-            console.log(result)
             if (result) {
-                // router.push("/admin")
+                router.push("/historico")
             }
         }).catch((error) => {
             console.log(error)
         })
-
-        // console.log(result)
-
-        // return router.push("/admin")
     }
 
     return (

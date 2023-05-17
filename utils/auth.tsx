@@ -1,5 +1,5 @@
 import firebase_app from "@/firebase/config";
-import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut, getAuth,  } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -8,12 +8,23 @@ const auth = getAuth(firebase_app);
 async function signIn(email: string, password: string) {
     try {
         const result = await signInWithEmailAndPassword(auth, email, password);
-        console.log(result)
+        console.log(result);
         return result;
     } catch (e) {
         console.log(e)
         return e;
     }
+}
+
+async function logOut() {
+  try {
+      const result = await signOut(auth);
+      console.log(result);
+      return true;
+  } catch (e) {
+      console.log(e)
+      return false;
+  }
 }
 
 async function useRequireAuth() {
@@ -31,4 +42,4 @@ async function useRequireAuth() {
   return user;
 };
 
-export { signIn, useRequireAuth}
+export { signIn, logOut, useRequireAuth}

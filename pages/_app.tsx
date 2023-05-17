@@ -3,15 +3,18 @@ import { ChakraProvider } from '@chakra-ui/react'
 import type { AppProps } from 'next/app'
 import { Inter } from 'next/font/google'
 import { theme } from '../styles/theme'
+import { AuthContextProvider } from '../context/AuthContext'
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <main className={inter.className}>
-      <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
-      </ ChakraProvider>
+      <AuthContextProvider>
+        <ChakraProvider theme={theme}>
+          <Component {...pageProps} />
+        </ ChakraProvider>
+      </AuthContextProvider>
     </main>
     )
 }
