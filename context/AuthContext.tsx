@@ -1,6 +1,7 @@
 import React from 'react';
 import { onAuthStateChanged, getAuth } from 'firebase/auth';
 import firebase_app from '@/firebase/config';
+import { Box, Flex, Spinner, useTheme } from '@chakra-ui/react';
 
 const auth = getAuth(firebase_app);
 
@@ -49,10 +50,14 @@ export const AuthContextProvider: React.FC<AuthProtectProps> = ({ children }) =>
   }, []);
 
   const isAuthenticated = !!user;
-
+  
   return (
     <AuthContext.Provider value={{ user, setUser, isAuthenticated }}>
-      {loading ? <div>Loading...</div> : children}
+      {loading ? 
+       <Flex padding='6' boxShadow='lg' bg='white' w={'100%'} h={'100vh'} alignItems={'center'} justifyContent={'center'}>
+         <Spinner color='#004E9A' w={'100px'} h={'100px'} thickness='6px' emptyColor='#E0E0E0' speed='0.85s'/>
+       </Flex>
+        : children}
     </AuthContext.Provider>
   );
 };
