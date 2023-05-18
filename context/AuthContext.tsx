@@ -1,35 +1,58 @@
 import React from 'react';
-import {
-    onAuthStateChanged,
-    getAuth,
-} from 'firebase/auth';
+import { onAuthStateChanged, getAuth } from 'firebase/auth';
 import firebase_app from '@/firebase/config';
 
 const auth = getAuth(firebase_app);
 
-export const AuthContext = React.createContext({});
+interface User {
+  id: string;
+  nome: string;
+}
+interface AuthContextProps {
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  isAuthenticated: boolean;
+}
 
-export const AuthContextProvider = ({children}) => {
-    const [user, setUser] = React.useState(null);
-    const [loading, setLoading] = React.useState(true);
+export const AuthContext = React.createContext<AuthContextProps>({
+  user: null,
+  setUser: () => {},
+  isAuthenticated: false,
+});
 
-    React.useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setUser(user);
-            } else {
-                setUser(null);
-            }
-            setLoading(false);
-            console.log('user', user);
-        });
+interface AuthProtectProps {
+  children: React.ReactNode;
+}
 
-        return () => unsubscribe();
-    }, []);
+export const AuthContextProvider: React.FC<AuthProtectProps> = ({ children }) => {
+  const [user, setUser] = React.useState<User | null>(null);
+  const [loading, setLoading] = React.useState(true);
 
-    return (
-        <AuthContext.Provider value={{ user, setUser }}>
-            {loading ? <div>Loading...</div> : children}
-        </AuthContext.Provider>
-    );
+  React.useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Converte o objeto de usuário recebido para o tipo User
+        const authenticatedUser: User = {
+          id: user.uid,
+          nome: user.displayName || '',
+          // ...
+        };
+        setUser(authenticatedUser);
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+      console.log('user', user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const isAuthenticated = !!user;
+
+  return (
+    <AuthContext.Provider value={{ user, setUser, isAuthenticated }}>
+      {loading ? <div>Loading...</div> : children}
+    </AuthContext.Provider>
+  );
 };

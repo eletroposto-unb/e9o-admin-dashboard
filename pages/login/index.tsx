@@ -1,7 +1,7 @@
 'use client'
 import React from "react";
 import { useRouter } from 'next/navigation'
-import { Button, Flex, Image, Input, Text} from "@chakra-ui/react";
+import { Button, Flex, Image, Input, Text, useToast} from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import styles from '../../styles/login/login.module.css'
 import { useTheme } from "@chakra-ui/react";
@@ -11,14 +11,23 @@ function Login() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const router = useRouter()
     const theme = useTheme()
-
+    const toast = useToast();
+    const id = 'test-toast'
+    
     const onSubmit = async (data: any) => {
         await signIn(data.email, data.password).then((result) => {
             if (result) {
-                router.push("/historico")
+                console.log(result)
+                router.push("/dashboard")
             }
         }).catch((error) => {
-            console.log(error)
+            if (!toast.isActive(id)) {
+                toast({
+                  id,
+                  title: error.message,
+                  status: "error",
+                })
+              }
         })
     }
 
