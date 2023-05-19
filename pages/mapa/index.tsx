@@ -1,4 +1,4 @@
-import HorizontalMenu from "@/components/HorizontalMenu"
+// import HorizontalMenu from "../../components/HorizontalMenu"
 import Navbar from "@/components/Navbar"
 
 function Mapa() {
