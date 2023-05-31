@@ -23,7 +23,7 @@ function Dashboard() {
             <Tab _selected={{ color: 'white', bg: theme.colors.primary.main, borderTopRadius: '10px' }}>Histórico</Tab>
           </TabList>
           <TabPanels>
-            <TabPanel>
+            <TabPanel style={{ paddingRight: 0, paddingLeft: 0 }}>
               <Mapa />
             </TabPanel>
             <TabPanel>
