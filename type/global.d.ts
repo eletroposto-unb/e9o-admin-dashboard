@@ -3,21 +3,23 @@ export {};
 declare global {
   type postFormData = {
     // DADOS DO POSTO
-    name: string;
-    description: string;
-    horarioDeFuncionamento: string;
+    nome: string;
+    descricao: string;
+    horarioFuncionamento: string;
     tipoTomada: string;
     comodidade: string;
-    status: string;
-    custo: number;
+    statusFuncionamento: string;
+    precoKwh: number;
     cabo: number;
+    potencia: number;
     // ENDEREÇO
-    lat?: number;
-    lng?: number;
+    latitude?: number;
+    longitude?: number;
     endereco: string;
+    estado: string;
     cep: string;
     cidade: string;
-    bairro: string;
+    complemento: string;
     numero: number;
   };
 

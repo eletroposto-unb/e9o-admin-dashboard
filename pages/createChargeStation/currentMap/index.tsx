@@ -32,7 +32,7 @@ export default function CurrentMap({ handleLatAndLng }: currentMapProps) {
       zoom={initialZoom}
       style={{
         width: "100%",
-        height: 280,
+        height: 300,
         borderWidth: 2,
         borderColor: "white",
         borderRadius: 5,

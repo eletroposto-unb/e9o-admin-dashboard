@@ -17,12 +17,11 @@ import {
   PopoverContent,
   PopoverArrow,
   PopoverCloseButton,
-  PopoverHeader,
   PopoverBody,
 } from "@chakra-ui/react";
 import { MdLiveHelp } from "react-icons/md";
-import { getAllUsers } from "@/services/user";
 import { FaCoins } from "react-icons/fa";
+import { ImPowerCord } from "react-icons/im";
 import { useForm, Controller } from "react-hook-form";
 
 import Router from "next/router";
@@ -48,21 +47,42 @@ const CriarPosto = () => {
     PLng: 0,
   });
 
-  useEffect(() => {
-    handleUsers();
-  }, []);
-
-  const handleUsers = async () => {
-    const data = await getAllUsers();
-    console.log("USERS DATA", data);
-  };
-
   const handleLatAndLng = (lat: number, lng: number) => {
     console.log(`LAT ${lat} LNG ${lng}`);
     setPosition({
       PLat: lat,
       PLng: lng,
     });
+  };
+
+  const formatData = (data: postFormData) => {
+    const payload = {
+      // DADOS DO POSTO
+      nome: data.nome,
+      descricao: data.descricao,
+      horarioFuncionamento: data.horarioFuncionamento,
+      tipoTomada: data.tipoTomada,
+      comodidade: data.comodidade,
+      statusFuncionamento: data.statusFuncionamento,
+      precoKwh: data.precoKwh,
+      cabo: data.cabo,
+      potencia: data.potencia,
+      // ENDEREÇO
+      latitude: position.PLat,
+      longitude: position.PLng,
+      endereco: data.endereco,
+      estado: data.cidade,
+      cep: data.cep,
+      cidade: data.cidade,
+      complemento: data.complemento,
+    };
+    return payload;
+  };
+
+  const onSubmit = (data: postFormData) => {
+    const payload = formatData(data);
+    console.log("data", data);
+    console.log("payload", payload);
   };
 
   const HelpComponent = (): JSX.Element => {
@@ -96,12 +116,6 @@ const CriarPosto = () => {
     );
   };
 
-  const formatData = (data: postFormData) => {};
-
-  const onSubmit = (data: postFormData) => {
-    console.log("data", data);
-  };
-
   return (
     <AuthProtect>
       <Navbar />
@@ -122,7 +136,7 @@ const CriarPosto = () => {
               <Text fontSize={14}>Nome</Text>
               <Controller
                 control={control}
-                name="name"
+                name="nome"
                 rules={{
                   required: "Campo obrigatório",
                 }}
@@ -141,10 +155,10 @@ const CriarPosto = () => {
                   />
                 )}
               />
-              {errors?.name && (
+              {errors?.nome && (
                 <Alert status="warning" height={5} mt={2} fontSize={12}>
                   <AlertIcon />
-                  {errors.name.message}
+                  {errors.nome.message}
                 </Alert>
               )}
             </Flex>
@@ -152,7 +166,7 @@ const CriarPosto = () => {
               <Text fontSize={14}>Descrição</Text>
               <Controller
                 control={control}
-                name="description"
+                name="descricao"
                 rules={{
                   required: "Campo obrigatório",
                 }}
@@ -173,10 +187,10 @@ const CriarPosto = () => {
                 )}
               />
 
-              {errors?.description && (
+              {errors?.descricao && (
                 <Alert status="warning" height={5} mt={2} fontSize={12}>
                   <AlertIcon />
-                  {errors.description.message}
+                  {errors.descricao.message}
                 </Alert>
               )}
             </Flex>
@@ -193,7 +207,7 @@ const CriarPosto = () => {
                 <Text fontSize={14}>Horário de Funcionamento</Text>
                 <Controller
                   control={control}
-                  name="horarioDeFuncionamento"
+                  name="horarioFuncionamento"
                   rules={{
                     required: "Campo obrigatório",
                   }}
@@ -212,10 +226,10 @@ const CriarPosto = () => {
                     />
                   )}
                 />
-                {errors?.horarioDeFuncionamento && (
+                {errors?.horarioFuncionamento && (
                   <Alert status="warning" height={5} mt={2} fontSize={12}>
                     <AlertIcon />
-                    {errors.horarioDeFuncionamento.message}
+                    {errors.horarioFuncionamento.message}
                   </Alert>
                 )}
               </Flex>
@@ -241,7 +255,7 @@ const CriarPosto = () => {
                       value={value}
                       onChange={onChange}
                     >
-                      <option value="tipo2">Tipo 2</option>
+                      <option value="tipo 2">Tipo 2</option>
                     </Select>
                   )}
                 />
@@ -288,7 +302,7 @@ const CriarPosto = () => {
                 <Text fontSize={14}>Status</Text>
                 <Controller
                   control={control}
-                  name="status"
+                  name="statusFuncionamento"
                   rules={{
                     required: "Campo obrigatório",
                   }}
@@ -312,10 +326,10 @@ const CriarPosto = () => {
                     </Select>
                   )}
                 />
-                {errors?.status && (
+                {errors?.statusFuncionamento && (
                   <Alert status="warning" height={5} mt={2} fontSize={12}>
                     <AlertIcon />
-                    {errors.status.message}
+                    {errors.statusFuncionamento.message}
                   </Alert>
                 )}
               </Flex>
@@ -325,7 +339,7 @@ const CriarPosto = () => {
                 <Text fontSize={14}>Custo por Khw</Text>
                 <Controller
                   control={control}
-                  name="custo"
+                  name="precoKwh"
                   rules={{
                     required: "Campo obrigatório",
                   }}
@@ -352,10 +366,10 @@ const CriarPosto = () => {
                     </InputGroup>
                   )}
                 />
-                {errors?.custo && (
+                {errors?.precoKwh && (
                   <Alert status="warning" height={5} mt={2} fontSize={12}>
                     <AlertIcon />
-                    {errors.custo.message}
+                    {errors.precoKwh.message}
                   </Alert>
                 )}
               </Flex>
@@ -395,6 +409,49 @@ const CriarPosto = () => {
               </Flex>
             </Flex>
             <Flex>
+              <Flex flexDirection={"column"} width={"100%"} mt={2} ml={1}>
+                <Text fontSize={14}>
+                  Potencia aproximada de carregamento? (Em Khw)
+                </Text>
+                <Controller
+                  control={control}
+                  name="potencia"
+                  rules={{
+                    required: "Campo obrigatório",
+                  }}
+                  render={({ field: { value, onChange } }) => (
+                    <InputGroup>
+                      <Input
+                        width={"100%"}
+                        size={"md"}
+                        borderRadius={"5"}
+                        borderWidth={0}
+                        type="number"
+                        backgroundColor={`${theme.colors.white.main}`}
+                        placeholder="Ex: 3,7"
+                        color={`${theme.colors.lightBlack.main}`}
+                        fontSize={14}
+                        value={value}
+                        onChange={onChange}
+                      />
+                      <InputRightElement>
+                        <ImPowerCord
+                          color={`${theme.colors.secundary.main}`}
+                          size={20}
+                        />
+                      </InputRightElement>
+                    </InputGroup>
+                  )}
+                />
+                {errors?.potencia && (
+                  <Alert status="warning" height={5} mt={2} fontSize={12}>
+                    <AlertIcon />
+                    {errors.potencia.message}
+                  </Alert>
+                )}
+              </Flex>
+            </Flex>
+            <Flex>
               <Flex flexDirection={"column"} width={"100%"} mt={2} mr={1}>
                 <Text fontSize={14}>Endereço</Text>
                 <Controller
@@ -428,10 +485,10 @@ const CriarPosto = () => {
             </Flex>
             <Flex>
               <Flex flexDirection={"column"} width={"100%"} mt={2} mr={1}>
-                <Text fontSize={14}>CEP</Text>
+                <Text fontSize={14}>Estado</Text>
                 <Controller
                   control={control}
-                  name="cep"
+                  name="estado"
                   rules={{
                     required: "Campo obrigatório",
                   }}
@@ -441,7 +498,7 @@ const CriarPosto = () => {
                       size={"md"}
                       borderRadius={"5"}
                       borderWidth={0}
-                      placeholder="Ex: 72.444-240"
+                      placeholder="Ex: Distrito Federal"
                       backgroundColor={`${theme.colors.white.main}`}
                       color={`${theme.colors.lightBlack.main}`}
                       fontSize={14}
@@ -490,10 +547,10 @@ const CriarPosto = () => {
             </Flex>
             <Flex>
               <Flex flexDirection={"column"} width={"100%"} mt={2} mr={1}>
-                <Text fontSize={14}>Bairro</Text>
+                <Text fontSize={14}>CEP</Text>
                 <Controller
                   control={control}
-                  name="bairro"
+                  name="cep"
                   rules={{
                     required: "Campo obrigatório",
                   }}
@@ -503,7 +560,7 @@ const CriarPosto = () => {
                       size={"md"}
                       borderRadius={"5"}
                       borderWidth={0}
-                      placeholder="Ex: St. Leste Projeção A"
+                      placeholder="Ex: 72.444-240"
                       backgroundColor={`${theme.colors.white.main}`}
                       color={`${theme.colors.lightBlack.main}`}
                       fontSize={14}
@@ -512,10 +569,10 @@ const CriarPosto = () => {
                     />
                   )}
                 />
-                {errors?.bairro && (
+                {errors?.cep && (
                   <Alert status="warning" height={5} mt={2} fontSize={12}>
                     <AlertIcon />
-                    {errors.bairro.message}
+                    {errors.cep.message}
                   </Alert>
                 )}
               </Flex>
@@ -549,6 +606,33 @@ const CriarPosto = () => {
                 )}
               </Flex>
             </Flex>
+            <Flex flexDirection={"column"} width={"100%"} mt={2}>
+              <Text fontSize={14}>Complemento</Text>
+              <Controller
+                control={control}
+                name="complemento"
+                render={({ field: { value, onChange } }) => (
+                  <Input
+                    width={"100%"}
+                    size={"md"}
+                    borderRadius={"5"}
+                    borderWidth={0}
+                    placeholder="Ex: St. Leste Projeção A"
+                    backgroundColor={`${theme.colors.white.main}`}
+                    color={`${theme.colors.lightBlack.main}`}
+                    fontSize={14}
+                    value={value}
+                    onChange={onChange}
+                  />
+                )}
+              />
+              {errors?.complemento && (
+                <Alert status="warning" height={5} mt={2} fontSize={12}>
+                  <AlertIcon />
+                  {errors.complemento.message}
+                </Alert>
+              )}
+            </Flex>
             <Flex width={"100%"} height={"100%"}>
               <Flex
                 flexDirection={"column"}
@@ -562,6 +646,7 @@ const CriarPosto = () => {
                   mt={2}
                   fontSize={12}
                   justifyContent={"center"}
+                  borderRadius={5}
                 >
                   <AlertIcon />
                   <Text>
