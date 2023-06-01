@@ -12,4 +12,4 @@ function Mapa() {
   )
 }
 
-export default Mapa
+export default Mapa;
