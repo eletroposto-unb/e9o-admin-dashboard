@@ -2,10 +2,10 @@
 import Navbar from "../../components/Navbar";
 import { Flex, useTheme } from "@chakra-ui/react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import Postos from "../postos";
-import Mapa from "../mapa";
-import Usuarios from "../usuarios";
-import Historico from "../historico";
+import Postos from "../chargeStations";
+import Mapa from "../chargeStationMap";
+import Usuarios from "../users";
+import Historico from "../history";
 import AuthProtect from "../../components/AuthProtect";
 
 function Dashboard() {

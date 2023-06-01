@@ -28,7 +28,7 @@ import AuthProtect from "@/components/AuthProtect";
 import Navbar from "@/components/Navbar";
 import dynamic from "next/dynamic";
 
-const Map = dynamic(() => import("./mapa"), {
+const CurrentMap = dynamic(() => import("./currentMap"), {
   ssr: false,
 });
 
@@ -41,21 +41,20 @@ const CriarPosto = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<postFormData>();
-  const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
+  const [position, setPosition] = useState({
+    PLat: 0,
+    PLng: 0,
+  });
 
-  const MyComponent = () => {
-    useMapEvents({
-      click: (currentEvent) => {
-        const { lat, lng } = currentEvent.latlng;
-        setPosition({
-          latitude: lat,
-          longitude: lng,
-        });
-        console.log("latitude:" + lat, "longitude:" + lng);
-      },
+  const handleLatAndLng = (lat: number, lng: number) => {
+    console.log(`LAT ${lat} LNG ${lng}`);
+    setPosition({
+      PLat: lat,
+      PLng: lng,
     });
-    return null;
   };
+
+  const formatData = (data: postFormData) => {};
 
   const onSubmit = (data: postFormData) => {
     console.log("data", data);
@@ -140,25 +139,7 @@ const CriarPosto = () => {
               )}
             </Flex>
             <Flex width={"100%"} mt={2}>
-              <MapContainer
-                center={[-15.9831845, -48.0413209]}
-                zoom={12}
-                style={{
-                  width: "100%",
-                  height: 280,
-                  borderWidth: 2,
-                  borderColor: "white",
-                  borderRadius: 5,
-                }}
-              >
-                <MyComponent />
-                <TileLayer url="https://a.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                {position.latitude !== 0 && (
-                  <Marker
-                    position={[position.latitude, position.longitude]}
-                  ></Marker>
-                )}
-              </MapContainer>
+              <CurrentMap handleLatAndLng={handleLatAndLng} />
             </Flex>
           </Flex>
           <Flex flexDirection={"column"} width={"50%"} ml={1}>

@@ -75,6 +75,7 @@ function Postos() {
           borderRadius={"5"}
           size={"md"}
           width={"20%"}
+          ml={"1"}
           mr={"1"}
           borderWidth={0}
           backgroundColor={`${theme.colors.white.main}`}
@@ -89,6 +90,7 @@ function Postos() {
           borderRadius={"5"}
           width={"20%"}
           size={"md"}
+          ml={"1"}
           mr={"1"}
           borderWidth={0}
           backgroundColor={`${theme.colors.white.main}`}
@@ -103,8 +105,9 @@ function Postos() {
           color={`${theme.colors.white.main}`}
           width={"20%"}
           fontSize={14}
+          ml={"1"}
           borderRadius={"5"}
-          onClick={() => router.push("/criarPosto")}
+          onClick={() => router.push("/createChargeStation")}
         >
           <GoPlus size={20} />
           Criar posto
