@@ -12,7 +12,15 @@ import {
   useToast,
   Alert,
   AlertIcon,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
 } from "@chakra-ui/react";
+import { MdLiveHelp } from "react-icons/md";
 import { getAllUsers } from "@/services/user";
 import { FaCoins } from "react-icons/fa";
 import { useForm, Controller } from "react-hook-form";
@@ -55,6 +63,37 @@ const CriarPosto = () => {
       PLat: lat,
       PLng: lng,
     });
+  };
+
+  const HelpComponent = (): JSX.Element => {
+    return (
+      <Popover>
+        <PopoverTrigger>
+          <Button
+            fontSize={14}
+            backgroundColor={`${theme.colors.lightGray.main}`}
+            color={`${theme.colors.primary.main}`}
+          >
+            <MdLiveHelp size={30} />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          zIndex={2}
+          backgroundColor={`${theme.colors.primary.main}`}
+        >
+          <PopoverArrow />
+          <PopoverCloseButton color={`${theme.colors.white.main}`} />
+          <PopoverBody
+            padding={"10% 5%"}
+            textAlign={"justify"}
+            color={`${theme.colors.white.main}`}
+          >
+            Marcar a localização no mapa é uma ferramenta extremamente útil que
+            auxilia os usuários a encontrar a estação de carregamento criada.
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
+    );
   };
 
   const formatData = (data: postFormData) => {};
@@ -141,8 +180,11 @@ const CriarPosto = () => {
                 </Alert>
               )}
             </Flex>
-            <Flex width={"100%"} mt={2}>
+            <Flex width={"100%"} mt={2} zIndex={1}>
               <CurrentMap handleLatAndLng={handleLatAndLng} />
+            </Flex>
+            <Flex>
+              <HelpComponent />
             </Flex>
           </Flex>
           <Flex flexDirection={"column"} width={"50%"} ml={1}>
