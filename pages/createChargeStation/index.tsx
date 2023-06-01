@@ -64,9 +64,9 @@ const CriarPosto = () => {
       tipoTomada: data.tipoTomada,
       comodidade: data.comodidade,
       statusFuncionamento: data.statusFuncionamento,
-      precoKwh: data.precoKwh,
-      cabo: data.cabo,
-      potencia: data.potencia,
+      precoKwh: Number(data.precoKwh),
+      cabo: Boolean(data.cabo),
+      potencia: Number(data.potencia),
       // ENDEREÇO
       latitude: position.PLat,
       longitude: position.PLng,
@@ -121,7 +121,7 @@ const CriarPosto = () => {
       <Navbar />
       <Flex
         w="100%"
-        minHeight={"90vh"}
+        minHeight={"calc(100vh - 74px)"}
         h="auto"
         flexDir="column"
         padding="2% 10% 5% 10%"
@@ -277,18 +277,33 @@ const CriarPosto = () => {
                     required: "Campo obrigatório",
                   }}
                   render={({ field: { value, onChange } }) => (
-                    <Input
+                    <Select
+                      borderRadius={"5"}
                       width={"100%"}
                       size={"md"}
-                      borderRadius={"5"}
+                      mr={"1"}
                       borderWidth={0}
                       backgroundColor={`${theme.colors.white.main}`}
-                      placeholder="Ex: Estacionamento privado"
+                      placeholder={"Selecione"}
                       color={`${theme.colors.lightBlack.main}`}
                       fontSize={14}
                       value={value}
                       onChange={onChange}
-                    />
+                    >
+                      <option value="Estacionamento Público">
+                        Estacionamento Público
+                      </option>
+                      <option value="Estacionamento Privado">
+                        Estacionamento Privado
+                      </option>
+                      <option value="Shopping">Shooping</option>
+                      <option value="Faculdade/Universidade">
+                        Faculdade/Universidade
+                      </option>
+                      <option value="Órgãos Públicos">Órgãos Públicos</option>
+                      <option value="Loja">Loja</option>
+                      <option value="Outro">Outro</option>
+                    </Select>
                   )}
                 />
                 {errors?.comodidade && (
@@ -323,6 +338,8 @@ const CriarPosto = () => {
                       <option value="disponivel">Disponível</option>
                       <option value="indisponivel">Indisponível</option>
                       <option value="bloqueado">Bloqueado</option>
+                      <option value="em manutencao">Em Manutenção</option>
+                      <option value="inativo">Inativo</option>
                     </Select>
                   )}
                 />
@@ -409,7 +426,7 @@ const CriarPosto = () => {
               </Flex>
             </Flex>
             <Flex>
-              <Flex flexDirection={"column"} width={"100%"} mt={2} ml={1}>
+              <Flex flexDirection={"column"} width={"100%"} mt={2}>
                 <Text fontSize={14}>
                   Potencia aproximada de carregamento? (Em Khw)
                 </Text>

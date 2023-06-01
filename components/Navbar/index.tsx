@@ -25,6 +25,7 @@ const Navbar: React.FC = () => {
         maxW="container.lg"
         maxWidth={"100%"}
         padding={"0 10%"}
+        maxH={50}
         alignItems={"center"}
       >
         <Image
