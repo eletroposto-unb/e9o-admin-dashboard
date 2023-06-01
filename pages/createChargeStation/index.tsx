@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   Text,
@@ -13,15 +13,9 @@ import {
   Alert,
   AlertIcon,
 } from "@chakra-ui/react";
+import { getAllUsers } from "@/services/user";
 import { FaCoins } from "react-icons/fa";
 import { useForm, Controller } from "react-hook-form";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMapEvents,
-} from "react-leaflet";
 
 import Router from "next/router";
 import AuthProtect from "@/components/AuthProtect";
@@ -45,6 +39,15 @@ const CriarPosto = () => {
     PLat: 0,
     PLng: 0,
   });
+
+  useEffect(() => {
+    handleUsers();
+  }, []);
+
+  const handleUsers = async () => {
+    const data = await getAllUsers();
+    console.log("USERS DATA", data);
+  };
 
   const handleLatAndLng = (lat: number, lng: number) => {
     console.log(`LAT ${lat} LNG ${lng}`);
