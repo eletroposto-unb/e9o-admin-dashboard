@@ -74,6 +74,7 @@ const CriarPosto = () => {
       estado: data.cidade,
       cep: data.cep,
       cidade: data.cidade,
+      numero: Number(data.numero),
       complemento: data.complemento,
     };
     return payload;
@@ -81,8 +82,24 @@ const CriarPosto = () => {
 
   const onSubmit = (data: postFormData) => {
     const payload = formatData(data);
-    console.log("data", data);
     console.log("payload", payload);
+    const stationCreated = true;
+    if (stationCreated) {
+      toast({
+        id: "create-station-success",
+        title: "Sucesso!",
+        description: "A Estação de Carregamento foi cadastrada com sucesso!",
+        status: "success",
+      });
+    } else {
+      toast({
+        id: "create-station-error",
+        title: "Alerta!",
+        description:
+          "Erro no cadastro da Estação de Carregamento. Tente novamente!",
+        status: "warning",
+      });
+    }
   };
 
   const HelpComponent = (): JSX.Element => {

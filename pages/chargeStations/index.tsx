@@ -62,12 +62,13 @@ function Postos() {
             className="InputLeft"
             pointerEvents="none"
             children={
-              <GoSearch size={20} color={`${theme.colors.mediumGray.main}`} />
+              <GoSearch size={20} color={`${theme.colors.lightBlack.main}`} />
             }
           />
           <Input
             placeholder="Buscar postos"
-            color={`${theme.colors.mediumGray.main}`}
+            color={`${theme.colors.lightBlack.main}`}
+            fontSize={14}
           />
         </InputGroup>
         <Select
@@ -79,7 +80,8 @@ function Postos() {
           mr={"1"}
           borderWidth={0}
           backgroundColor={`${theme.colors.white.main}`}
-          color={`${theme.colors.mediumGray.main}`}
+          color={`${theme.colors.lightBlack.main}`}
+          fontSize={14}
         >
           <option value="option1">Option 1</option>
           <option value="option2">Option 2</option>
@@ -94,7 +96,8 @@ function Postos() {
           mr={"1"}
           borderWidth={0}
           backgroundColor={`${theme.colors.white.main}`}
-          color={`${theme.colors.mediumGray.main}`}
+          color={`${theme.colors.lightBlack.main}`}
+          fontSize={14}
         >
           <option value="option1">Option 1</option>
           <option value="option2">Option 2</option>
@@ -107,9 +110,12 @@ function Postos() {
           fontSize={14}
           ml={"1"}
           borderRadius={"5"}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
           onClick={() => router.push("/createChargeStation")}
         >
-          <GoPlus size={20} />
+          <GoPlus size={20} style={{ marginRight: 5 }} />
           Criar posto
         </Button>
       </Flex>
@@ -124,7 +130,11 @@ function Postos() {
           <Table size="sm">
             <Thead>
               {THeadData.map((name, index) => {
-                return <Th key={index}>{name}</Th>;
+                return (
+                  <Th key={index} textAlign={index === 2 ? "right" : "left"}>
+                    {name}
+                  </Th>
+                );
               })}
             </Thead>
             <Tbody>
@@ -133,7 +143,7 @@ function Postos() {
                   <Tr>
                     <Td>{posto.name}</Td>
                     <Td>{posto.local}</Td>
-                    <Td>
+                    <Td display={"flex"} justifyContent={"flex-end"}>
                       <Flex gap={2}>
                         <Tooltip
                           label="Visualizar Posto"
