@@ -1,6 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
-export default function Map() {
+export default function Map({ stations }) {
   return (
     <MapContainer
       center={[-15.988826153080108, -48.044526246024574]}
@@ -17,11 +17,20 @@ export default function Map() {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={[-15.988826153080108, -48.044526246024574]}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
+      {stations &&
+        stations.length >= 1 &&
+        stations.map((s: any, index: number) => {
+          return (
+            <Marker
+              position={[s.address.latitude, s.address.longitude]}
+              key={index}
+            >
+              <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
+              </Popup>
+            </Marker>
+          );
+        })}
     </MapContainer>
   );
 }

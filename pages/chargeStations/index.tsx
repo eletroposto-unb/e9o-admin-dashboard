@@ -239,7 +239,7 @@ function Postos() {
                             <button>
                               <MdOutlineDeleteOutline
                                 onClick={() =>
-                                  handleDeleteStation(station.idPosto)
+                                  handleDeleteStation(s.station.idPosto)
                                 }
                                 size={21}
                                 color={`${theme.colors.black.main}`}
