@@ -23,7 +23,7 @@ export const createStation = async (
   payload: postFormData
 ): Promise<Result<postFormData>> => {
   try {
-    const res = await api.post<postFormData>(`/cars/register/`, payload);
+    const res = await api.post<postFormData>(`/stations/register/`, payload);
     return {
       type: "success",
       value: res.data,

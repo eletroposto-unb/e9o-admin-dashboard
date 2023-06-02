@@ -10,7 +10,7 @@ declare global {
     comodidade: string;
     statusFuncionamento: string;
     precoKwh: number;
-    cabo: number;
+    cabo: any;
     potencia: number;
     // ENDEREÇO
     latitude?: number;
@@ -19,8 +19,8 @@ declare global {
     estado: string;
     cep: string;
     cidade: string;
-    complemento: string;
     numero: number;
+    complemento: string;
   };
 
   type User = {

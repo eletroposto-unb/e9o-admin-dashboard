@@ -18,6 +18,7 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   PopoverBody,
+  Spinner,
 } from "@chakra-ui/react";
 import { MdLiveHelp } from "react-icons/md";
 import { FaCoins } from "react-icons/fa";
@@ -28,6 +29,7 @@ import Router from "next/router";
 import AuthProtect from "@/components/AuthProtect";
 import Navbar from "@/components/Navbar";
 import dynamic from "next/dynamic";
+import { createStation } from "@/services/station";
 
 const CurrentMap = dynamic(() => import("./currentMap"), {
   ssr: false,
@@ -36,6 +38,7 @@ const CurrentMap = dynamic(() => import("./currentMap"), {
 const CriarPosto = () => {
   const theme = useTheme();
   const toast = useToast();
+  const [loading, setLoading] = useState(false);
   const {
     reset,
     control,
@@ -80,17 +83,40 @@ const CriarPosto = () => {
     return payload;
   };
 
-  const onSubmit = (data: postFormData) => {
+  const handleResetForm = () => {
+    reset({
+      nome: "",
+      descricao: "",
+      horarioFuncionamento: "",
+      tipoTomada: "",
+      comodidade: "",
+      statusFuncionamento: "",
+      precoKwh: Number(""),
+      cabo: "",
+      potencia: Number(""),
+      endereco: "",
+      estado: "",
+      cep: "",
+      cidade: "",
+      numero: Number(""),
+      complemento: "",
+    });
+  };
+
+  const onSubmit = async (data: postFormData) => {
+    setLoading(true);
     const payload = formatData(data);
     console.log("payload", payload);
-    const stationCreated = true;
-    if (stationCreated) {
+    const stationCreated = await createStation(payload);
+    console.log("stationCreated", stationCreated?.value);
+    if (stationCreated?.value?.station.idPosto) {
       toast({
         id: "create-station-success",
         title: "Sucesso!",
         description: "A Estação de Carregamento foi cadastrada com sucesso!",
         status: "success",
       });
+      handleResetForm();
     } else {
       toast({
         id: "create-station-error",
@@ -100,6 +126,7 @@ const CriarPosto = () => {
         status: "warning",
       });
     }
+    setLoading(false);
   };
 
   const HelpComponent = (): JSX.Element => {
@@ -704,8 +731,19 @@ const CriarPosto = () => {
             h={10}
             backgroundColor={`${theme.colors.primary.main}`}
             onClick={handleSubmit(onSubmit)}
+            rightIcon={
+              loading && (
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor="gray.200"
+                  color="blue.500"
+                  size="md"
+                />
+              )
+            }
           >
-            Salvar
+            {loading ? "Salvando" : "Salvar"}
           </Button>
           <Button
             colorScheme="teal"
