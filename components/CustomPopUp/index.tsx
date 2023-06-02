@@ -4,6 +4,15 @@ import { FiArrowRight } from "react-icons/fi";
 
 const CustomPopup = ({ currentStation }): JSX.Element => {
   const theme = useTheme();
+
+  const handleStatus = (status: string) => {
+    return status === "disponivel" ? (
+      <span style={{ color: "green" }}>{status}</span>
+    ) : (
+      <span style={{ color: "red" }}>{status}</span>
+    );
+  };
+
   return (
     <Popup>
       <Flex
@@ -35,6 +44,15 @@ const CustomPopup = ({ currentStation }): JSX.Element => {
           </span>
           <span style={{ display: "block", textTransform: "capitalize" }}>
             {currentStation.address.comodidade}
+          </span>
+          <span
+            style={{
+              display: "block",
+              textTransform: "capitalize",
+              fontWeight: "bold",
+            }}
+          >
+            {handleStatus(currentStation.station.statusFuncionamento)}
           </span>
         </p>
         <Button
