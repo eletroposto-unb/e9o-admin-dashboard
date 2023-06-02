@@ -17,7 +17,9 @@ import {
   Tooltip,
   Text,
   useToast,
+  Link,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { GoPlus, GoSearch } from "react-icons/go";
 import { AiFillEye, AiFillCheckCircle } from "react-icons/ai";
@@ -42,13 +44,11 @@ function Postos() {
 
   const handleAllStation = async () => {
     const data = await getAllStations();
-    console.log("data", data?.value);
     setStations(data?.value);
   };
 
   const handleDeleteStation = async (idPosto: number) => {
     const stationDeleted = await deleteStation(idPosto);
-    console.log("stationDeleted", stationDeleted?.value);
     if (stationDeleted?.value?.idPosto) {
       toast({
         id: "delete-station-success",
@@ -171,10 +171,12 @@ function Postos() {
           display={"flex"}
           justifyContent={"center"}
           alignItems={"center"}
-          onClick={() => router.push("/createChargeStation")}
+          // onClick={() => router.push("/createChargeStation")}
         >
           <GoPlus size={20} style={{ marginRight: 5 }} />
-          Criar posto
+          <Link as={NextLink} href="/createChargeStation">
+            Criar Posto
+          </Link>
         </Button>
       </Flex>
       <Flex width={"100%"} marginTop={3}>
@@ -198,7 +200,6 @@ function Postos() {
               </Thead>
               <Tbody>
                 {stations.map((s, index) => {
-                  console.log("station", s);
                   return (
                     <Tr>
                       <Td>{s.station.nome}</Td>
@@ -226,7 +227,14 @@ function Postos() {
                           >
                             <button>
                               <FiEdit
-                                onClick={() => console.log("Editar")}
+                                onClick={() =>
+                                  router.push({
+                                    pathname: "/createChargeStation",
+                                    query: {
+                                      idPosto: `${s.station.idPosto}`,
+                                    },
+                                  })
+                                }
                                 size={18}
                                 color={`${theme.colors.black.main}`}
                               />

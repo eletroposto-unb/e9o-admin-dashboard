@@ -24,6 +24,7 @@ import { MdLiveHelp } from "react-icons/md";
 import { FaCoins } from "react-icons/fa";
 import { ImPowerCord } from "react-icons/im";
 import { useForm, Controller } from "react-hook-form";
+import { useRouter } from "next/router";
 
 import Router from "next/router";
 import AuthProtect from "@/components/AuthProtect";
@@ -37,6 +38,7 @@ const CurrentMap = dynamic(() => import("./currentMap"), {
 
 const CriarPosto = () => {
   const theme = useTheme();
+  const router = useRouter();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const {
@@ -50,8 +52,12 @@ const CriarPosto = () => {
     PLng: 0,
   });
 
+  useEffect(() => {
+    if (router.query.idPosto) console.log("DEVE EDITAR");
+    else console.log("DEVE CRIAR");
+  }, []);
+
   const handleLatAndLng = (lat: number, lng: number) => {
-    console.log(`LAT ${lat} LNG ${lng}`);
     setPosition({
       PLat: lat,
       PLng: lng,
@@ -106,9 +112,7 @@ const CriarPosto = () => {
   const onSubmit = async (data: postFormData) => {
     setLoading(true);
     const payload = formatData(data);
-    console.log("payload", payload);
     const stationCreated = await createStation(payload);
-    console.log("stationCreated", stationCreated?.value);
     if (stationCreated?.value?.station.idPosto) {
       toast({
         id: "create-station-success",
