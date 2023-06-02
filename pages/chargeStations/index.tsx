@@ -197,14 +197,14 @@ function Postos() {
                 })}
               </Thead>
               <Tbody>
-                {stations.map((station, index) => {
-                  console.log("station", station);
+                {stations.map((s, index) => {
+                  console.log("station", s);
                   return (
                     <Tr>
-                      <Td>{station.nome}</Td>
-                      <Td>{station.local}</Td>
-                      <Td>{station.comodidade}</Td>
-                      {HandleStationStatus(station.statusFuncionamento)}
+                      <Td>{s.station.nome}</Td>
+                      <Td>{s.address.endereco}</Td>
+                      <Td>{s.address.comodidade}</Td>
+                      {HandleStationStatus(s.station.statusFuncionamento)}
                       <Td display={"flex"} justifyContent={"flex-end"}>
                         <Flex gap={2}>
                           <Tooltip
@@ -233,8 +233,8 @@ function Postos() {
                             </button>
                           </Tooltip>
                           <Tooltip
-                            label="Editar Posto"
-                            aria-label="Editar Posto"
+                            label="Excluir Posto"
+                            aria-label="Excluir Posto"
                           >
                             <button>
                               <MdOutlineDeleteOutline
