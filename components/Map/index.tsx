@@ -1,4 +1,5 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import CustomPopup from "../CustomPopUp";
 
 export default function Map({ stations }) {
   return (
@@ -25,9 +26,7 @@ export default function Map({ stations }) {
               position={[s.address.latitude, s.address.longitude]}
               key={index}
             >
-              <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-              </Popup>
+              <CustomPopup currentStation={s} />
             </Marker>
           );
         })}

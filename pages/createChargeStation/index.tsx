@@ -74,7 +74,7 @@ const CriarPosto = () => {
       latitude: position.PLat,
       longitude: position.PLng,
       endereco: data.endereco,
-      estado: data.cidade,
+      estado: data.estado,
       cep: data.cep,
       cidade: data.cidade,
       numero: Number(data.numero),
