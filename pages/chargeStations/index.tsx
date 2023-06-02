@@ -16,40 +16,23 @@ import {
   Td,
   Tooltip,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { GoPlus, GoSearch } from "react-icons/go";
-import { AiFillEye } from "react-icons/ai";
+import { AiFillEye, AiFillCheckCircle } from "react-icons/ai";
+import { GrVmMaintenance } from "react-icons/gr";
 import { FiEdit } from "react-icons/fi";
 import { FaRegFrownOpen } from "react-icons/fa";
-import { getAllStations } from "@/services/station";
+import { ImBlocked } from "react-icons/im";
+import { MdOutlineDeleteOutline } from "react-icons/md";
+import { getAllStations, deleteStation } from "@/services/station";
 
-const THeadData = ["Nome", "Local", "Ações"];
-const TableMockData = [
-  {
-    name: "Eletroposto FGA",
-    local: "GAMA DF",
-    actions: "GAMA DF",
-  },
-  {
-    name: "Eletroposto FGA",
-    local: "GAMA DF",
-    actions: "GAMA DF",
-  },
-  {
-    name: "Eletroposto FGA",
-    local: "GAMA DF",
-    actions: "GAMA DF",
-  },
-  {
-    name: "Eletroposto FGA",
-    local: "GAMA DF",
-    actions: "GAMA DF",
-  },
-];
+const THeadData = ["Nome", "Local", "Comodidade", "Status", "Ações"];
 
 function Postos() {
   const theme = useTheme();
+  const toast = useToast();
   const router = useRouter();
   const [stations, setStations] = useState([]);
 
@@ -61,6 +44,28 @@ function Postos() {
     const data = await getAllStations();
     console.log("data", data?.value);
     setStations(data?.value);
+  };
+
+  const handleDeleteStation = async (idPosto: number) => {
+    const stationDeleted = await deleteStation(idPosto);
+    console.log("stationDeleted", stationDeleted?.value);
+    if (stationDeleted?.value?.idPosto) {
+      toast({
+        id: "delete-station-success",
+        title: "Sucesso!",
+        description: "A Estação de Carregamento foi deletada com sucesso!",
+        status: "success",
+      });
+    } else {
+      toast({
+        id: "delete-station-error",
+        title: "Alerta!",
+        description:
+          "Erro na deleção da Estação de Carregamento. Tente novamente!",
+        status: "warning",
+      });
+    }
+    handleAllStation();
   };
 
   const NoStationsComponent = (): JSX.Element => {
@@ -76,6 +81,27 @@ function Postos() {
         <Text fontSize={24}>Nenhum posto cadastrado!</Text>
         <Text fontSize={14}>Cadastre o primeiro posto agora mesmo.</Text>
       </Flex>
+    );
+  };
+
+  const HandleStationStatus = (status): JSX.Element => {
+    return (
+      <Td textTransform={"capitalize"} whiteSpace={"nowrap"}>
+        <Text display={"flex"} alignItems={"center"}>
+          <Text>{status}</Text>
+          {status === "disponivel" ? (
+            <AiFillCheckCircle
+              size={20}
+              color="green"
+              style={{ marginLeft: 5 }}
+            />
+          ) : status === "em manutencao" ? (
+            <GrVmMaintenance size={20} color="red" style={{ marginLeft: 5 }} />
+          ) : (
+            <ImBlocked size={20} color="red" style={{ marginLeft: 5 }} />
+          )}
+        </Text>
+      </Td>
     );
   };
 
@@ -152,7 +178,7 @@ function Postos() {
         </Button>
       </Flex>
       <Flex width={"100%"} marginTop={3}>
-        {stations ? (
+        {stations.length >= 1 ? (
           <TableContainer
             width={"100%"}
             paddingY={5}
@@ -164,7 +190,7 @@ function Postos() {
               <Thead>
                 {THeadData.map((name, index) => {
                   return (
-                    <Th key={index} textAlign={index === 2 ? "right" : "left"}>
+                    <Th key={index} textAlign={index === 4 ? "right" : "left"}>
                       {name}
                     </Th>
                   );
@@ -172,10 +198,13 @@ function Postos() {
               </Thead>
               <Tbody>
                 {stations.map((station, index) => {
+                  console.log("station", station);
                   return (
                     <Tr>
                       <Td>{station.nome}</Td>
                       <Td>{station.local}</Td>
+                      <Td>{station.comodidade}</Td>
+                      {HandleStationStatus(station.statusFuncionamento)}
                       <Td display={"flex"} justifyContent={"flex-end"}>
                         <Flex gap={2}>
                           <Tooltip
@@ -199,6 +228,20 @@ function Postos() {
                               <FiEdit
                                 onClick={() => console.log("Editar")}
                                 size={18}
+                                color={`${theme.colors.black.main}`}
+                              />
+                            </button>
+                          </Tooltip>
+                          <Tooltip
+                            label="Editar Posto"
+                            aria-label="Editar Posto"
+                          >
+                            <button>
+                              <MdOutlineDeleteOutline
+                                onClick={() =>
+                                  handleDeleteStation(station.idPosto)
+                                }
+                                size={21}
                                 color={`${theme.colors.black.main}`}
                               />
                             </button>

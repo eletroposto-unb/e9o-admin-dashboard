@@ -39,3 +39,24 @@ export const createStation = async (
     };
   }
 };
+
+export const deleteStation = async (
+  idPosto: number
+): Promise<Result<postFormData>> => {
+  try {
+    const res = await api.delete<postFormData>(`/stations/station/${idPosto}`);
+    return {
+      type: "success",
+      value: res.data,
+    } as unknown as Result<postFormData>;
+  } catch (error) {
+    if (error instanceof Error)
+      return { type: "error", error, value: undefined };
+
+    return {
+      type: "error",
+      error: new Error("Erro desconhecido"),
+      value: undefined,
+    };
+  }
+};
