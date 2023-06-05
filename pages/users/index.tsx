@@ -5,12 +5,11 @@ import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { AiFillEye } from "react-icons/ai";
 import { Tooltip } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { getAllUsers } from "@/services/user";
+import { getAllUsers, updateUser, updateUserStatus } from "@/services/user";
 
 const Usuarios = () => {
   const theme = useTheme();
 
-  const [userModal, setUserModal] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [userModalData, setUserModalData] = useState<User>({} as User);
 
@@ -20,8 +19,8 @@ const Usuarios = () => {
   };
 
   const handleUserModalClose = () => {
-    setUserModal(false);
     setUserModalData({} as User);
+    onClose();
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,21 +30,26 @@ const Usuarios = () => {
   }, []);
 
   const handleGetAllUsers = async () => {
-    const data = await getAllUsers()
+    await getAllUsers()
       .then((res) => {
-        console.log(res);
         setUsers(res?.value);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {});
+  };
+
+  const handleModalSaveButton = async () => {
+    await updateUser(userModalData)
+      .then(() => {
+        handleGetAllUsers().then(() => {
+          onClose();
+        });
+      })
+      .catch((error) => {
+        console.log(error);
       });
-
-    // setStations(data?.value);
   };
 
-  const handleModalSaveButton = () => {
-    console.log("salvou");
-  };
+  const modalSaveButtonCondition = userModalData.status === "inactive";
 
   return (
     <>
@@ -103,7 +107,7 @@ const Usuarios = () => {
         </TableContainer>
       </div>
       {/* Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpen} onClose={handleUserModalClose} isCentered>
         <ModalOverlay />
         <ModalContent backgroundColor={`${theme.colors.white.main}`}>
           <ModalHeader>Usuário</ModalHeader>
@@ -129,21 +133,40 @@ const Usuarios = () => {
                   color={`${theme.colors.lightBlack.main}`}
                   fontSize={14}
                   defaultValue={userModalData.status}
+                  onChange={() => {
+                    updateUserStatus(userModalData)
+                      .then((res) => {
+                        setUserModalData({ ...userModalData, status: res?.value?.status });
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }}
+                  value={userModalData.status}
                 >
-                  <option value="blocked">blocked</option>
-                  <option value="active">active</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="active">Active</option>
                 </Select>
               </Flex>
               <Flex gap={3}>
                 <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
                   Admin
                 </Text>
-                <Checkbox colorScheme="green" defaultChecked={userModalData.is_admin} />
+                <Checkbox
+                  colorScheme="green"
+                  defaultChecked={userModalData.is_admin}
+                  onChange={(e) => {
+                    setUserModalData({ ...userModalData, is_admin: e.target.checked });
+                  }}
+                  checked={userModalData.is_admin}
+                />
               </Flex>
-              <Button colorScheme="blue" onClick={handleModalSaveButton}>
+              <Button colorScheme="blue" onClick={handleModalSaveButton} disabled={modalSaveButtonCondition} style={{ opacity: modalSaveButtonCondition ? 0.6 : 1 }}>
                 Salvar
               </Button>
-              <Button variant="ghost" onClick={onClose}>Close</Button>
+              <Button variant="ghost" onClick={handleUserModalClose}>
+                Close
+              </Button>
             </Flex>
           </ModalBody>
         </ModalContent>
