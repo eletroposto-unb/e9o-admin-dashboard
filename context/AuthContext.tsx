@@ -2,6 +2,7 @@ import React from 'react';
 import { onAuthStateChanged, getAuth } from 'firebase/auth';
 import firebase_app from '@/firebase/config';
 import { Box, Flex, Spinner, useTheme } from '@chakra-ui/react';
+import { getUser } from "@/services/user";
 
 const auth = getAuth(firebase_app);
 
@@ -32,6 +33,10 @@ export const AuthContextProvider: React.FC<AuthProtectProps> = ({ children }) =>
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+
+        // pega os dados do usuário na API; se necessário descomentar linha seguinte e ajustar User interface
+        // const usuario = await getUser(user.uid); 
+
         // Converte o objeto de usuário recebido para o tipo User
         const authenticatedUser: User = {
           id: user.uid,
@@ -61,3 +66,5 @@ export const AuthContextProvider: React.FC<AuthProtectProps> = ({ children }) =>
     </AuthContext.Provider>
   );
 };
+
+
