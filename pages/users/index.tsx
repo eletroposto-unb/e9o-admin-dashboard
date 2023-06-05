@@ -1,4 +1,4 @@
-import { TableContainer, Table, Thead, Tr, Th, Tbody, Td, Flex, useTheme, useDisclosure, Button } from "@chakra-ui/react";
+import { TableContainer, Table, Thead, Tr, Th, Tbody, Td, Flex, useTheme, useDisclosure, Button, Input, Select, Text, Checkbox } from "@chakra-ui/react";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from "@chakra-ui/react";
 import { BiHistory, BiCoinStack, BiEdit } from "react-icons/bi";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
@@ -11,17 +11,17 @@ const Usuarios = () => {
   const theme = useTheme();
 
   const [userModal, setUserModal] = useState(false);
-  const [users, setUsers] = useState<User[]>([]); 
-  const [userModalData, setUserModalData] = useState({});
+  const [users, setUsers] = useState<User[]>([]);
+  const [userModalData, setUserModalData] = useState<User>({} as User);
 
   const handleUserModal = (index: number) => {
-    setUserModalData(mockUSuarios[index]);
+    setUserModalData(users[index]);
     onOpen();
   };
 
   const handleUserModalClose = () => {
     setUserModal(false);
-    setUserModalData({});
+    setUserModalData({} as User);
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -43,6 +43,10 @@ const Usuarios = () => {
     // setStations(data?.value);
   };
 
+  const handleModalSaveButton = () => {
+    console.log("salvou");
+  };
+
   return (
     <>
       <div>
@@ -56,43 +60,44 @@ const Usuarios = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {users && users.map((usuario: User, index) => {
-                return (
-                  <Tr key={`${usuario.cpf}-${usuario.email}`}>
-                    <Td>{usuario.name}</Td>
-                    <Td>{usuario.email}</Td>
-                    <Td>
-                      <Flex justify={"flex-end"} gap={3}>
-                        <Tooltip label="Histórico" aria-label="Histórico">
-                          <button>
-                            <BiHistory size={24} />
-                          </button>
-                        </Tooltip>
-                        <Tooltip label="Créditos" aria-label="Créditos">
-                          <button>
-                            <BiCoinStack size={24} />
-                          </button>
-                        </Tooltip>
-                        <Tooltip label="Administrador" aria-label="Administrador">
-                          <button>
-                            <MdOutlineAdminPanelSettings size={24} />
-                          </button>
-                        </Tooltip>
-                        <Tooltip label="Visualizar" aria-label="Visualizar">
-                          <button onClick={() => handleUserModal(index)}>
-                            <AiFillEye size={24} />
-                          </button>
-                        </Tooltip>
-                        <Tooltip label="Editar" aria-label="Editar">
-                          <button>
-                            <BiEdit size={24} />
-                          </button>
-                        </Tooltip>
-                      </Flex>
-                    </Td>
-                  </Tr>
-                );
-              })}
+              {users &&
+                users.map((usuario: User, index) => {
+                  return (
+                    <Tr key={`${usuario.cpf}-${usuario.email}`}>
+                      <Td>{usuario.name}</Td>
+                      <Td>{usuario.email}</Td>
+                      <Td>
+                        <Flex justify={"flex-end"} gap={3}>
+                          <Tooltip label="Histórico" aria-label="Histórico">
+                            <button>
+                              <BiHistory size={24} />
+                            </button>
+                          </Tooltip>
+                          <Tooltip label="Créditos" aria-label="Créditos">
+                            <button>
+                              <BiCoinStack size={24} />
+                            </button>
+                          </Tooltip>
+                          <Tooltip label="Administrador" aria-label="Administrador">
+                            <button>
+                              <MdOutlineAdminPanelSettings size={24} />
+                            </button>
+                          </Tooltip>
+                          <Tooltip label="Visualizar" aria-label="Visualizar">
+                            <button onClick={() => handleUserModal(index)}>
+                              <AiFillEye size={24} />
+                            </button>
+                          </Tooltip>
+                          <Tooltip label="Editar" aria-label="Editar">
+                            <button>
+                              <BiEdit size={24} />
+                            </button>
+                          </Tooltip>
+                        </Flex>
+                      </Td>
+                    </Tr>
+                  );
+                })}
             </Tbody>
           </Table>
         </TableContainer>
@@ -100,17 +105,47 @@ const Usuarios = () => {
       {/* Modal */}
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+        <ModalContent backgroundColor={`${theme.colors.white.main}`}>
+          <ModalHeader>Usuário</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>{/* <Lorem count={2} /> */}</ModalBody>
+          <ModalBody>
+            <Flex direction={"column"} gap={3}>
+              <Flex direction={"column"} gap={0.5}>
+                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                  Nome
+                </Text>
+                <Input placeholder="Nome" color={`${theme.colors.lightBlack.main}`} fontSize={14} disabled defaultValue={userModalData.name} />
+              </Flex>
 
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost">Secondary Action</Button>
-          </ModalFooter>
+              <Flex direction={"column"} gap={0.5}>
+                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                  Status
+                </Text>
+                <Select
+                  placeholder="Status"
+                  borderRadius={"5"}
+                  borderWidth={1}
+                  backgroundColor={`${theme.colors.white.main}`}
+                  color={`${theme.colors.lightBlack.main}`}
+                  fontSize={14}
+                  defaultValue={userModalData.status}
+                >
+                  <option value="blocked">blocked</option>
+                  <option value="active">active</option>
+                </Select>
+              </Flex>
+              <Flex gap={3}>
+                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                  Admin
+                </Text>
+                <Checkbox colorScheme="green" defaultChecked={userModalData.is_admin} />
+              </Flex>
+              <Button colorScheme="blue" onClick={handleModalSaveButton}>
+                Salvar
+              </Button>
+              <Button variant="ghost" onClick={onClose}>Close</Button>
+            </Flex>
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>
@@ -118,36 +153,3 @@ const Usuarios = () => {
 };
 
 export default Usuarios;
-
-const mockUSuarios = [
-  {
-    id: 1,
-    nome: "João Pedro",
-    email: "joao@eletroposto.unb",
-  },
-  {
-    id: 2,
-    nome: "Victor Lucas",
-    email: "victor@eletroposto.unb",
-  },
-  {
-    id: 3,
-    nome: "Gabriela Pivetta",
-    email: "gabriela@eletroposto.unb",
-  },
-  {
-    id: 4,
-    nome: "André Lucas",
-    email: "andre@eletroposto.unb",
-  },
-  {
-    id: 5,
-    nome: "Vinícius Vieira",
-    email: "vini@eletroposto.unb",
-  },
-  {
-    id: 6,
-    nome: "Kevin Batista",
-    email: "kevin@eletroposto.unb",
-  },
-];
