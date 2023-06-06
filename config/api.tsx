@@ -5,7 +5,7 @@ const api = axios.create({
   timeout: 5000, // Tempo máximo de espera por uma resposta (opcional)
   withCredentials: true,
   headers: {
-    "X-Requested-With": "XMLHttpRequest",
+    "X-Requested-With": "XMLHttpRequest"
   },
 });
 

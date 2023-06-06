@@ -1,5 +1,29 @@
-import { TableContainer, Table, Thead, Tr, Th, Tbody, Td, Flex, useTheme, useDisclosure, Button, Input, Select, Text, Checkbox } from "@chakra-ui/react";
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from "@chakra-ui/react";
+import {
+  TableContainer,
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Td,
+  Flex,
+  useTheme,
+  useDisclosure,
+  Button,
+  Input,
+  Select,
+  Text,
+  Checkbox,
+} from "@chakra-ui/react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
 import { BiHistory, BiCoinStack, BiEdit } from "react-icons/bi";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { AiFillEye } from "react-icons/ai";
@@ -54,7 +78,13 @@ const Usuarios = () => {
   return (
     <>
       <div>
-        <TableContainer border="1px" borderColor="gray.200" borderRadius={"4"} padding={3} backgroundColor={`${theme.colors.white.main}`}>
+        <TableContainer
+          border="1px"
+          borderColor="gray.200"
+          borderRadius={"4"}
+          padding={3}
+          backgroundColor={`${theme.colors.white.main}`}
+        >
           <Table variant="simple" size="sm">
             <Thead>
               <Tr>
@@ -82,7 +112,10 @@ const Usuarios = () => {
                               <BiCoinStack size={24} />
                             </button>
                           </Tooltip>
-                          <Tooltip label="Administrador" aria-label="Administrador">
+                          <Tooltip
+                            label="Administrador"
+                            aria-label="Administrador"
+                          >
                             <button>
                               <MdOutlineAdminPanelSettings size={24} />
                             </button>
@@ -115,14 +148,26 @@ const Usuarios = () => {
           <ModalBody>
             <Flex direction={"column"} gap={3}>
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Nome
                 </Text>
-                <Input placeholder="Nome" color={`${theme.colors.lightBlack.main}`} fontSize={14} disabled defaultValue={userModalData.name} />
+                <Input
+                  placeholder="Nome"
+                  color={`${theme.colors.lightBlack.main}`}
+                  fontSize={14}
+                  disabled
+                  defaultValue={userModalData.name}
+                />
               </Flex>
 
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Status
                 </Text>
                 <Select
@@ -136,7 +181,10 @@ const Usuarios = () => {
                   onChange={() => {
                     updateUserStatus(userModalData)
                       .then((res) => {
-                        setUserModalData({ ...userModalData, status: res?.value?.status });
+                        setUserModalData({
+                          ...userModalData,
+                          status: res?.value?.status,
+                        });
                       })
                       .catch((error) => {
                         console.log(error);
@@ -149,19 +197,30 @@ const Usuarios = () => {
                 </Select>
               </Flex>
               <Flex gap={3}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Admin
                 </Text>
                 <Checkbox
                   colorScheme="green"
                   defaultChecked={userModalData.is_admin}
                   onChange={(e) => {
-                    setUserModalData({ ...userModalData, is_admin: e.target.checked });
+                    setUserModalData({
+                      ...userModalData,
+                      is_admin: e.target.checked,
+                    });
                   }}
                   checked={userModalData.is_admin}
                 />
               </Flex>
-              <Button colorScheme="blue" onClick={handleModalSaveButton} disabled={modalSaveButtonCondition} style={{ opacity: modalSaveButtonCondition ? 0.6 : 1 }}>
+              <Button
+                colorScheme="blue"
+                onClick={handleModalSaveButton}
+                disabled={modalSaveButtonCondition}
+                style={{ opacity: modalSaveButtonCondition ? 0.6 : 1 }}
+              >
                 Salvar
               </Button>
               <Button variant="ghost" onClick={handleUserModalClose}>

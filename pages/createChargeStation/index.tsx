@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import {
   Flex,
@@ -25,12 +26,14 @@ import { FaCoins } from "react-icons/fa";
 import { ImPowerCord } from "react-icons/im";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/router";
-
+import { BiArrowBack } from "react-icons/bi";
 import Router from "next/router";
 import AuthProtect from "@/components/AuthProtect";
 import Navbar from "@/components/Navbar";
 import dynamic from "next/dynamic";
-import { createStation } from "@/services/station";
+import { createStation, getStation } from "@/services/station";
+import { Stations } from "@/dto/station.dto";
+import { StationEditDto } from "@/dto/stationEdit.dto";
 
 const CurrentMap = dynamic(() => import("./currentMap"), {
   ssr: false,
@@ -46,15 +49,57 @@ const CriarPosto = () => {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<postFormData>();
   const [position, setPosition] = useState({
     PLat: 0,
     PLng: 0,
   });
 
+  const handleStation = async (id: number) => {
+    // const data = await getStation(id);
+    const data = {
+      nome: "Posto 1",
+      descricao: "Posto 1 da FGA",
+      horarioFuncionamento: "8h às 18h",
+      tipoTomada: "tipo 2",
+      comodidade: "Estacionamento Público",
+      statusFuncionamento: "disponivel",
+      precoKwh: 4,
+      cabo: 1,
+      potencia: 3.7,
+      latitude: -15.988826153080108,
+      longitude: -48.044526246024574,
+      endereco: "Faculdade UnB Gama - FGA UnB",
+      estado: "Distrito Federal",
+      cep: "72.444-240",
+      cidade: "Gama",
+      numero: 9,
+      complemento: "St. Leste Projeção A",
+    };
+    return data;
+  };
+
   useEffect(() => {
-    if (router.query.idPosto) console.log("DEVE EDITAR");
-    else console.log("DEVE CRIAR");
+    async function fetchMyAPI() {
+      console.log("ID POSTO:", router.query.idPosto);
+
+      if (router.query.idPosto) {
+        const res = await handleStation(Number(router.query.idPosto));
+        console.log("DEVE EDITAR:", res);
+
+        Object.entries(res).forEach(([key, value]) => {
+          setValue(key as keyof StationEditDto, value);
+        });
+
+        setPosition({
+          PLat: res.latitude,
+          PLng: res.longitude,
+        });
+      } else console.log("DEVE CRIAR");
+    }
+
+    fetchMyAPI();
   }, []);
 
   const handleLatAndLng = (lat: number, lng: number) => {
@@ -175,10 +220,16 @@ const CriarPosto = () => {
         padding="2% 10% 5% 10%"
         backgroundColor={`${theme.colors.lightGray.main}`}
       >
+        <BiArrowBack
+          size={25}
+          color={`${theme.colors.primary.main}`}
+          onClick={() => Router.back()}
+          style={{ cursor: "pointer", marginBottom: 10 }}
+        />
         <Text fontWeight={"bold"} fontSize={18}>
-          Criar posto
+          {router.query.idPosto ? "Editar posto" : "Criar posto"}
         </Text>
-        <Flex flexDirection={"row"} mt={2}>
+        <Flex flexDirection={"row"} mt={2} gap={15}>
           <Flex width={"50%"} mr={1} flexDirection={"column"}>
             <Flex flexDirection={"column"} width={"100%"} mt={2}>
               <Text fontSize={14}>Nome</Text>
@@ -707,7 +758,7 @@ const CriarPosto = () => {
               >
                 <Alert
                   status="info"
-                  height={5}
+                  height={10}
                   mt={2}
                   fontSize={12}
                   justifyContent={"center"}
