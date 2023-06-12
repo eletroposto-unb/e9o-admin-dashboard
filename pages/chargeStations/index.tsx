@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-key */
+/* eslint-disable react/no-children-prop */
 import React, { useMemo, useEffect, useState } from "react";
 import {
   Flex,
@@ -180,7 +182,7 @@ function Postos() {
         </Button>
       </Flex>
       <Flex width={"100%"} marginTop={3}>
-        {stations.length >= 1 ? (
+        {stations?.length >= 1 ? (
           <TableContainer
             width={"100%"}
             paddingY={5}

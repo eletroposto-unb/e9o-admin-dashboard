@@ -1,4 +1,4 @@
-import api from "../../config/api";
+import api from "../config/api";
 
 export const getUser = async (firebase_uid: string): Promise<Result<User>> => {
   try {
