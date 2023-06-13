@@ -3,7 +3,7 @@ function Historico() {
     <div>
       <h1>Histórico</h1>
     </div>
-  )
+  );
 }
 
-export default Historico
+export default Historico;

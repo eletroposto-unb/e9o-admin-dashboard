@@ -33,4 +33,11 @@ export const theme = extendTheme({
       main: "#E2B93B",
     },
   },
+  fonts: {
+    modalLabel: {
+      size: "12px",
+      lineHeight: "16px",
+      color: "#000000"
+    },
+  },
 });

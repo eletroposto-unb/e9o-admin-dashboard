@@ -7,10 +7,19 @@ const initialZoom = 12;
 
 type currentMapProps = {
   handleLatAndLng: Function;
+  lat: number;
+  lng: number;
 };
 
-export default function CurrentMap({ handleLatAndLng }: currentMapProps) {
-  const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
+export default function CurrentMap({
+  handleLatAndLng,
+  lat,
+  lng,
+}: currentMapProps) {
+  const [position, setPosition] = useState({
+    latitude: lat ? lat : 0,
+    longitude: lng ? lng : 0,
+  });
 
   const MyComponent = () => {
     useMapEvents({

@@ -19,7 +19,7 @@ export default function Map({ stations }) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {stations &&
-        stations.length >= 1 &&
+        stations?.length >= 1 &&
         stations.map((s: any, index: number) => {
           return (
             <Marker

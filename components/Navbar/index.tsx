@@ -43,6 +43,7 @@ const Navbar: React.FC = () => {
             size="sm"
             width="90px"
             onClick={handleSignOut}
+            color="white"
           >
             Sair
           </Button>

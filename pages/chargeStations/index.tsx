@@ -31,6 +31,7 @@ import { FaRegFrownOpen } from "react-icons/fa";
 import { ImBlocked } from "react-icons/im";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { getAllStations, deleteStation } from "@/services/station";
+import { Stations } from "@/dto/station.dto";
 
 const THeadData = ["Nome", "Local", "Comodidade", "Status", "Ações"];
 
@@ -38,7 +39,7 @@ function Postos() {
   const theme = useTheme();
   const toast = useToast();
   const router = useRouter();
-  const [stations, setStations] = useState([]);
+  const [stations, setStations] = useState<Stations[]>([]);
 
   useEffect(() => {
     handleAllStation();
@@ -86,7 +87,7 @@ function Postos() {
     );
   };
 
-  const HandleStationStatus = (status): JSX.Element => {
+  const HandleStationStatus = (status: any): JSX.Element => {
     return (
       <Td textTransform={"capitalize"} whiteSpace={"nowrap"}>
         <Text display={"flex"} alignItems={"center"}>
@@ -118,13 +119,9 @@ function Postos() {
           borderWidth={0}
           backgroundColor={`${theme.colors.white.main}`}
         >
-          <InputRightElement
-            className="InputLeft"
-            pointerEvents="none"
-            children={
-              <GoSearch size={20} color={`${theme.colors.lightBlack.main}`} />
-            }
-          />
+          <InputRightElement className="InputLeft" pointerEvents="none">
+            <GoSearch size={20} color={`${theme.colors.lightBlack.main}`} />
+          </InputRightElement>
           <Input
             placeholder="Buscar postos"
             color={`${theme.colors.lightBlack.main}`}
@@ -173,12 +170,11 @@ function Postos() {
           display={"flex"}
           justifyContent={"center"}
           alignItems={"center"}
-          // onClick={() => router.push("/createChargeStation")}
+          onClick={() => router.push("/createChargeStation")}
         >
           <GoPlus size={20} style={{ marginRight: 5 }} />
-          <Link as={NextLink} href="/createChargeStation">
-            Criar Posto
-          </Link>
+          {/* <Link as={NextLink} href="/createChargeStation"> */}
+          Criar Posto
         </Button>
       </Flex>
       <Flex width={"100%"} marginTop={3}>
@@ -201,13 +197,13 @@ function Postos() {
                 })}
               </Thead>
               <Tbody>
-                {stations.map((s, index) => {
+                {stations.map((s: Stations, index) => {
                   return (
-                    <Tr>
-                      <Td>{s.station.nome}</Td>
-                      <Td>{s.address.endereco}</Td>
-                      <Td>{s.address.comodidade}</Td>
-                      {HandleStationStatus(s.station.statusFuncionamento)}
+                    <Tr key={`${index}-${s?.station}`}>
+                      <Td>{s?.station.nome}</Td>
+                      <Td>{s?.address.endereco}</Td>
+                      <Td>{s?.address.comodidade}</Td>
+                      {HandleStationStatus(s?.station.statusFuncionamento)}
                       <Td display={"flex"} justifyContent={"flex-end"}>
                         <Flex gap={2}>
                           <Tooltip
