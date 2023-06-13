@@ -59,17 +59,16 @@ const CriarPosto = () => {
 
   const handleStation = async (id: number) => {
     const data = await getStation(id);
-
-    console.log(data);
+    handleLatAndLng(data.value.address.latitude, data.value.address.longitude);
     const station = {
       nome: data.value.station.nome,
       descricao: data.value.station.descricao,
       horarioFuncionamento: data.value.station.horarioFuncionamento,
       tipoTomada: data.value.station.tipoTomada,
-      comodidade: data.value.station.comodidade,
+      comodidade: data.value.address.comodidade,
       statusFuncionamento: data.value.station.statusFuncionamento,
       precoKwh: data.value.station.precoKwh,
-      cabo: data.value.station.cabo,
+      cabo: data.value.station.cabo ? 1 : 0,
       potencia: data.value.station.potencia,
       latitude: data.value.address.latitude,
       longitude: data.value.address.longitude,
@@ -88,13 +87,13 @@ const CriarPosto = () => {
       if (router.query.idPosto) {
         const res = await handleStation(Number(router.query.idPosto));
 
-        Object.entries(res).forEach(([key, value]) => {
-          setValue(key as keyof StationEditDto, value);
-        });
-
         setPosition({
           PLat: res.latitude,
           PLng: res.longitude,
+        });
+
+        Object.entries(res).forEach(([key, value]) => {
+          setValue(key as keyof StationEditDto, value);
         });
       }
     }
@@ -119,7 +118,7 @@ const CriarPosto = () => {
       comodidade: data.comodidade,
       statusFuncionamento: data.statusFuncionamento,
       precoKwh: Number(data.precoKwh),
-      cabo: Boolean(data.cabo),
+      cabo: Number(data.cabo) === 1 ? 1 : 0,
       potencia: Number(data.potencia),
       // ENDEREÇO
       latitude: position.PLat,
@@ -308,7 +307,13 @@ const CriarPosto = () => {
               )}
             </Flex>
             <Flex width={"100%"} mt={2} zIndex={1}>
-              <CurrentMap handleLatAndLng={handleLatAndLng} />
+              {position.PLat && (
+                <CurrentMap
+                  handleLatAndLng={handleLatAndLng}
+                  lat={position?.PLat}
+                  lng={position?.PLng}
+                />
+              )}
             </Flex>
             <Flex>
               <HelpComponent />
