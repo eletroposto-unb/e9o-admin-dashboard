@@ -34,6 +34,7 @@ import dynamic from "next/dynamic";
 import { createStation, getStation } from "@/services/station";
 import { Stations } from "@/dto/station.dto";
 import { StationEditDto } from "@/dto/stationEdit.dto";
+import { updateStation } from "../../services/station";
 
 const CurrentMap = dynamic(() => import("./currentMap"), {
   ssr: false,
@@ -57,36 +58,35 @@ const CriarPosto = () => {
   });
 
   const handleStation = async (id: number) => {
-    // const data = await getStation(id);
-    const data = {
-      nome: "Posto 1",
-      descricao: "Posto 1 da FGA",
-      horarioFuncionamento: "8h às 18h",
-      tipoTomada: "tipo 2",
-      comodidade: "Estacionamento Público",
-      statusFuncionamento: "disponivel",
-      precoKwh: 4,
-      cabo: 1,
-      potencia: 3.7,
-      latitude: -15.988826153080108,
-      longitude: -48.044526246024574,
-      endereco: "Faculdade UnB Gama - FGA UnB",
-      estado: "Distrito Federal",
-      cep: "72.444-240",
-      cidade: "Gama",
-      numero: 9,
-      complemento: "St. Leste Projeção A",
+    const data = await getStation(id);
+
+    console.log(data);
+    const station = {
+      nome: data.value.station.nome,
+      descricao: data.value.station.descricao,
+      horarioFuncionamento: data.value.station.horarioFuncionamento,
+      tipoTomada: data.value.station.tipoTomada,
+      comodidade: data.value.station.comodidade,
+      statusFuncionamento: data.value.station.statusFuncionamento,
+      precoKwh: data.value.station.precoKwh,
+      cabo: data.value.station.cabo,
+      potencia: data.value.station.potencia,
+      latitude: data.value.address.latitude,
+      longitude: data.value.address.longitude,
+      endereco: data.value.address.endereco,
+      estado: data.value.address.estado,
+      cep: data.value.address.cep,
+      cidade: data.value.address.cidade,
+      numero: data.value.address.numero,
+      complemento: data.value.address.complemento,
     };
-    return data;
+    return station;
   };
 
   useEffect(() => {
     async function fetchMyAPI() {
-      console.log("ID POSTO:", router.query.idPosto);
-
       if (router.query.idPosto) {
         const res = await handleStation(Number(router.query.idPosto));
-        console.log("DEVE EDITAR:", res);
 
         Object.entries(res).forEach(([key, value]) => {
           setValue(key as keyof StationEditDto, value);
@@ -96,7 +96,7 @@ const CriarPosto = () => {
           PLat: res.latitude,
           PLng: res.longitude,
         });
-      } else console.log("DEVE CRIAR");
+      }
     }
 
     fetchMyAPI();
@@ -157,21 +157,35 @@ const CriarPosto = () => {
   const onSubmit = async (data: postFormData) => {
     setLoading(true);
     const payload = formatData(data);
-    const stationCreated = await createStation(payload);
-    if (stationCreated?.value?.station.idPosto) {
+
+    let station;
+    let descricao;
+    let descricaoErro;
+    if (!router.query.idPosto) {
+      station = await createStation(payload);
+      descricao = "A estação de carregamento foi cadastrada com sucesso!";
+      descricaoErro =
+        "Erro no cadastro da estação de carregamento. Tente novamente!";
+      handleResetForm();
+    } else {
+      station = await updateStation(payload, Number(router.query.idPosto));
+      descricao = "A estação de carregamento foi editada com sucesso!";
+      descricaoErro =
+        "Erro no cadastro da Estação de Carregamento. Tente novamente!";
+    }
+
+    if (station?.value?.station.idPosto) {
       toast({
         id: "create-station-success",
         title: "Sucesso!",
-        description: "A Estação de Carregamento foi cadastrada com sucesso!",
+        description: descricao,
         status: "success",
       });
-      handleResetForm();
     } else {
       toast({
         id: "create-station-error",
         title: "Alerta!",
-        description:
-          "Erro no cadastro da Estação de Carregamento. Tente novamente!",
+        description: descricaoErro,
         status: "warning",
       });
     }
