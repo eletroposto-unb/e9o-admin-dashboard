@@ -82,7 +82,8 @@ const Usuarios = () => {
           border="1px"
           borderColor="gray.200"
           borderRadius={"10"}
-          padding={3}
+          paddingY={5}
+          paddingX={3}
           backgroundColor={`${theme.colors.white.main}`}
         >
           <Table variant="simple" size="sm">
