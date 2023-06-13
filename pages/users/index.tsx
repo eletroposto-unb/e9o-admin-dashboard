@@ -81,7 +81,7 @@ const Usuarios = () => {
         <TableContainer
           border="1px"
           borderColor="gray.200"
-          borderRadius={"4"}
+          borderRadius={"10"}
           padding={3}
           backgroundColor={`${theme.colors.white.main}`}
         >
@@ -90,6 +90,7 @@ const Usuarios = () => {
               <Tr>
                 <Th>Nome</Th>
                 <Th>Email</Th>
+                <Th>Status</Th>
                 <Th textAlign="end">Ações</Th>
               </Tr>
             </Thead>
@@ -100,16 +101,23 @@ const Usuarios = () => {
                     <Tr key={`${usuario.cpf}-${usuario.email}`}>
                       <Td>{usuario.name}</Td>
                       <Td>{usuario.email}</Td>
+                      <Td
+                        style={{
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        {usuario.status}
+                      </Td>
                       <Td>
                         <Flex justify={"flex-end"} gap={3}>
                           <Tooltip label="Histórico" aria-label="Histórico">
                             <button>
-                              <BiHistory size={24} />
+                              <BiHistory size={20} />
                             </button>
                           </Tooltip>
                           <Tooltip label="Créditos" aria-label="Créditos">
                             <button>
-                              <BiCoinStack size={24} />
+                              <BiCoinStack size={20} />
                             </button>
                           </Tooltip>
                           <Tooltip
@@ -117,17 +125,17 @@ const Usuarios = () => {
                             aria-label="Administrador"
                           >
                             <button>
-                              <MdOutlineAdminPanelSettings size={24} />
+                              <MdOutlineAdminPanelSettings size={20} />
                             </button>
                           </Tooltip>
                           <Tooltip label="Visualizar" aria-label="Visualizar">
                             <button onClick={() => handleUserModal(index)}>
-                              <AiFillEye size={24} />
+                              <AiFillEye size={20} />
                             </button>
                           </Tooltip>
                           <Tooltip label="Editar" aria-label="Editar">
                             <button>
-                              <BiEdit size={24} />
+                              <BiEdit size={20} />
                             </button>
                           </Tooltip>
                         </Flex>
