@@ -33,6 +33,7 @@ import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { AiFillEye } from "react-icons/ai";
 import { Tooltip } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { getAllUsers, updateUser, updateUserStatus } from "@/services/user";
 
 const Usuarios = () => {
@@ -45,13 +46,11 @@ const Usuarios = () => {
     onOpen: onEditUserOpen,
     onClose: onEditUserClose,
   } = useDisclosure();
-
   const {
     isOpen: isViewUserOpen,
     onOpen: onViewUserOpen,
     onClose: onViewUserClose,
   } = useDisclosure();
-
   const {
     isOpen: isWalletUserOpen,
     onOpen: onWalletUserOpen,
@@ -62,6 +61,10 @@ const Usuarios = () => {
     setUserModalData(users[index]);
     onEditUserOpen();
   };
+
+  useEffect(() => {
+    handleGetAllUsers();
+  }, []);
 
   const handleEditUserModalClose = () => {
     setUserModalData({} as User);
@@ -88,10 +91,6 @@ const Usuarios = () => {
     onWalletUserClose();
   };
 
-  useEffect(() => {
-    handleGetAllUsers();
-  }, []);
-
   const handleGetAllUsers = async () => {
     await getAllUsers()
       .then((res) => {
@@ -113,6 +112,14 @@ const Usuarios = () => {
   };
 
   const modalSaveButtonCondition = userModalData.status === "inactive";
+
+  const onSubmitAccepted = () => {
+    console.log("DEVE ACEITAR");
+  };
+
+  const onSubmitRecused = () => {
+    console.log("DEVE RECUSAR");
+  };
 
   return (
     <>
@@ -198,7 +205,7 @@ const Usuarios = () => {
         <ModalOverlay />
         <ModalContent
           backgroundColor={`${theme.colors.white.main}`}
-          paddingBottom={10}
+          paddingBottom={2}
         >
           <ModalHeader>Carteira do Usuário</ModalHeader>
           <ModalCloseButton />
@@ -227,7 +234,7 @@ const Usuarios = () => {
                   CPF
                 </Text>
                 <Input
-                  placeholder="Nome"
+                  placeholder="Cpf"
                   color={`${theme.colors.lightBlack.main}`}
                   fontSize={14}
                   disabled
@@ -253,9 +260,11 @@ const Usuarios = () => {
                   />
                   <Input
                     placeholder="Créditos atuais"
+                    type="number"
+                    disabled
                     color={`${theme.colors.lightBlack.main}`}
                     fontSize={14}
-                    defaultValue={userModalData.cpf}
+                    defaultValue={userModalData.wallet?.qtdCreditos}
                   />
                   <InputRightElement>
                     <CheckboxIcon color="green.500" />
@@ -269,6 +278,7 @@ const Usuarios = () => {
                 >
                   Créditos solicitados
                 </Text>
+
                 <InputGroup>
                   <InputLeftElement
                     pointerEvents="none"
@@ -277,15 +287,18 @@ const Usuarios = () => {
                     children="$"
                   />
                   <Input
+                    type="number"
                     placeholder="Créditos solicitados"
                     color={`${theme.colors.lightBlack.main}`}
                     fontSize={14}
-                    defaultValue={userModalData.cpf}
+                    disabled
+                    defaultValue={userModalData.wallet?.qtdCreditos}
                   />
                   <InputRightElement>
                     <CheckboxIcon color="green.500" />
                   </InputRightElement>
                 </InputGroup>
+
                 <Flex
                   direction={"column"}
                   gap={4}
@@ -300,6 +313,7 @@ const Usuarios = () => {
                     width={"40%"}
                     backgroundColor={`${theme.colors.primary.main}`}
                     color={`${theme.colors.white.main}`}
+                    onClick={onSubmitAccepted}
                   >
                     Aceitar
                   </Button>
@@ -307,6 +321,7 @@ const Usuarios = () => {
                     width={"40%"}
                     backgroundColor={`${theme.colors.secundary.main}`}
                     color={`${theme.colors.white.main}`}
+                    onClick={onSubmitRecused}
                   >
                     Recusar
                   </Button>
@@ -431,7 +446,6 @@ const Usuarios = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      {/* Modal */}
       <Modal
         isOpen={isEditUserOpen}
         onClose={handleEditUserModalClose}
