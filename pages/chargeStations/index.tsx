@@ -24,7 +24,7 @@ import {
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { GoPlus, GoSearch } from "react-icons/go";
-import { AiFillEye, AiFillCheckCircle } from "react-icons/ai";
+import { AiOutlineEye, AiFillCheckCircle } from "react-icons/ai";
 import { GrVmMaintenance } from "react-icons/gr";
 import { FiEdit } from "react-icons/fi";
 import { FaRegFrownOpen } from "react-icons/fa";
@@ -159,7 +159,7 @@ function Postos() {
           />
         </InputGroup>
         <Select
-          placeholder="Selecionar Cidade"
+          placeholder="Selecionar Status"
           borderRadius={"5"}
           size={"md"}
           width={"20%"}
@@ -250,9 +250,9 @@ function Postos() {
                             justifyContent={"center"}
                           >
                             <button>
-                              <AiFillEye
+                              <AiOutlineEye
                                 onClick={() => console.log("Visualizar")}
-                                size={20}
+                                size={22}
                                 color={`${theme.colors.black.main}`}
                               />
                             </button>

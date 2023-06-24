@@ -30,6 +30,10 @@ declare global {
     qtdCreditos: number;
   };
 
+  type UpdatedWallet = {
+    aprovado: boolean;
+  };
+
   type User = {
     name: string;
     surname: string;
