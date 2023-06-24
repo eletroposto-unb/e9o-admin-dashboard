@@ -30,10 +30,9 @@ import {
 } from "@chakra-ui/react";
 import { BiHistory, BiCoinStack, BiEdit } from "react-icons/bi";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
-import { AiFillEye } from "react-icons/ai";
+import { AiFillEye, AiOutlineUser } from "react-icons/ai";
 import { Tooltip } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
 import { getAllUsers, updateUser, updateUserStatus } from "@/services/user";
 
 const Usuarios = () => {
@@ -65,6 +64,8 @@ const Usuarios = () => {
   useEffect(() => {
     handleGetAllUsers();
   }, []);
+
+  console.log("first", userModalData);
 
   const handleEditUserModalClose = () => {
     setUserModalData({} as User);
@@ -157,17 +158,26 @@ const Usuarios = () => {
                       </Td>
                       <Td>
                         <Flex justify={"flex-end"} gap={3}>
-                          <Tooltip
-                            label="Administrador"
-                            aria-label="Administrador"
-                          >
-                            <button>
-                              <MdOutlineAdminPanelSettings size={20} />
-                            </button>
-                          </Tooltip>
+                          {usuario.is_admin ? (
+                            <Tooltip
+                              label="Administrador"
+                              aria-label="Administrador"
+                            >
+                              <button>
+                                <MdOutlineAdminPanelSettings size={22} />
+                              </button>
+                            </Tooltip>
+                          ) : (
+                            <Tooltip label="Usuário" aria-label="Usuário">
+                              <button>
+                                <AiOutlineUser size={22} />
+                              </button>
+                            </Tooltip>
+                          )}
+
                           <Tooltip label="Histórico" aria-label="Histórico">
                             <button>
-                              <BiHistory size={20} />
+                              <BiHistory size={22} />
                             </button>
                           </Tooltip>
                           <Tooltip label="Créditos" aria-label="Créditos">
@@ -526,7 +536,8 @@ const Usuarios = () => {
                 />
               </Flex>
               <Button
-                colorScheme="blue"
+                backgroundColor={`${theme.colors.primary.main}`}
+                color={`${theme.colors.white.main}`}
                 onClick={handleModalSaveButton}
                 disabled={modalSaveButtonCondition}
                 style={{ opacity: modalSaveButtonCondition ? 0.6 : 1 }}

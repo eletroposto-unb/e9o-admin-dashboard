@@ -58,6 +58,7 @@ const CriarPosto = () => {
   });
 
   const handleStation = async (id: number) => {
+    setLoading(true);
     const data = await getStation(id);
     handleLatAndLng(data.value.address.latitude, data.value.address.longitude);
     const station = {
@@ -79,6 +80,7 @@ const CriarPosto = () => {
       numero: data.value.address.numero,
       complemento: data.value.address.complemento,
     };
+    setLoading(false);
     return station;
   };
 
@@ -307,11 +309,19 @@ const CriarPosto = () => {
               )}
             </Flex>
             <Flex width={"100%"} mt={2} zIndex={1}>
-              {position.PLat && (
+              {!loading ? (
                 <CurrentMap
                   handleLatAndLng={handleLatAndLng}
                   lat={position?.PLat}
                   lng={position?.PLng}
+                />
+              ) : (
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor="gray.200"
+                  color="blue.500"
+                  size="md"
                 />
               )}
             </Flex>

@@ -34,12 +34,16 @@ import { getAllStations, deleteStation } from "@/services/station";
 import { Stations } from "@/dto/station.dto";
 
 const THeadData = ["Nome", "Local", "Comodidade", "Status", "Ações"];
+let tempStations: Stations[] = [];
 
 function Postos() {
   const theme = useTheme();
   const toast = useToast();
   const router = useRouter();
   const [stations, setStations] = useState<Stations[]>([]);
+  const [searchField, setSearchField] = useState<string>("");
+  const [searchStatus, setSearchStatus] = useState<string>("");
+  const [searchLocation, setSearchLocation] = useState<string>("");
 
   useEffect(() => {
     handleAllStation();
@@ -47,8 +51,33 @@ function Postos() {
 
   const handleAllStation = async () => {
     const data = await getAllStations();
+    tempStations = data?.value;
     setStations(data?.value);
   };
+
+  useMemo(() => {
+    const filteredResult = stations.filter((s) =>
+      s?.station.nome.toLowerCase().includes(searchField)
+    );
+    setStations(filteredResult);
+    if (!searchField) handleAllStation();
+  }, [searchField]);
+
+  useMemo(() => {
+    const filteredResult = tempStations.filter(
+      (s) => s?.station?.statusFuncionamento == searchStatus
+    );
+    setStations(filteredResult);
+    if (!searchStatus) handleAllStation();
+  }, [searchStatus]);
+
+  useMemo(() => {
+    const filteredResult = tempStations.filter(
+      (s) => s?.address?.comodidade == searchLocation
+    );
+    setStations(filteredResult);
+    if (!searchLocation) handleAllStation();
+  }, [searchLocation]);
 
   const handleDeleteStation = async (idPosto: number) => {
     const stationDeleted = await deleteStation(idPosto);
@@ -81,7 +110,7 @@ function Postos() {
         padding={"5% 0%"}
       >
         <FaRegFrownOpen size={65} color={`${theme.colors.primary.main}`} />
-        <Text fontSize={24}>Nenhum posto cadastrado!</Text>
+        <Text fontSize={24}>Nenhum posto encontrado!</Text>
         <Text fontSize={14}>Cadastre o primeiro posto agora mesmo.</Text>
       </Flex>
     );
@@ -125,6 +154,7 @@ function Postos() {
           <Input
             placeholder="Buscar postos"
             color={`${theme.colors.lightBlack.main}`}
+            onChange={(e) => setSearchField(e.target.value)}
             fontSize={14}
           />
         </InputGroup>
@@ -139,13 +169,16 @@ function Postos() {
           backgroundColor={`${theme.colors.white.main}`}
           color={`${theme.colors.lightBlack.main}`}
           fontSize={14}
+          onChange={(e) => setSearchStatus(e.target.value)}
         >
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
+          <option value="disponivel">Disponível</option>
+          <option value="indisponivel">Indisponível</option>
+          <option value="bloqueado">Bloqueado</option>
+          <option value="em manutencao">Em Manutenção</option>
+          <option value="inativo">Inativo</option>
         </Select>
         <Select
-          placeholder="Selecionar Status"
+          placeholder="Selecionar Comodidade"
           borderRadius={"5"}
           width={"20%"}
           size={"md"}
@@ -154,11 +187,16 @@ function Postos() {
           borderWidth={0}
           backgroundColor={`${theme.colors.white.main}`}
           color={`${theme.colors.lightBlack.main}`}
+          onChange={(e) => setSearchLocation(e.target.value)}
           fontSize={14}
         >
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
+          <option value="Estacionamento Público">Estacionamento Público</option>
+          <option value="Estacionamento Privado">Estacionamento Privado</option>
+          <option value="Shopping">Shooping</option>
+          <option value="Faculdade/Universidade">Faculdade/Universidade</option>
+          <option value="Órgãos Públicos">Órgãos Públicos</option>
+          <option value="Loja">Loja</option>
+          <option value="Outro">Outro</option>
         </Select>
         <Button
           backgroundColor={`${theme.colors.success.main}`}
