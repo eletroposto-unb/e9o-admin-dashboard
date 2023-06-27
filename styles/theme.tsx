@@ -37,7 +37,12 @@ export const theme = extendTheme({
     modalLabel: {
       size: "12px",
       lineHeight: "16px",
-      color: "#000000"
+      color: "#000000",
+    },
+    modalTitle: {
+      size: "16px",
+      lineHeight: "16px",
+      color: "#FFC107",
     },
   },
 });

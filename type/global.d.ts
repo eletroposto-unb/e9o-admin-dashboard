@@ -23,6 +23,17 @@ declare global {
     complemento: string;
   };
 
+  type Wallet = {
+    cpf?: string;
+    idCarteira: number;
+    qtdCreditosSolicitados: number;
+    qtdCreditos: number;
+  };
+
+  type UpdatedWallet = {
+    aprovado: boolean;
+  };
+
   type User = {
     name: string;
     surname: string;
@@ -32,6 +43,7 @@ declare global {
     telefone?: string;
     status: string;
     firebase_uid?: string;
+    wallet: Wallet;
   };
 
   type Result<T> = ResultSuccess<T> | ResultError;
