@@ -28,13 +28,16 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { GoSearch } from "react-icons/go";
-import { BiHistory, BiCoinStack, BiEdit } from "react-icons/bi";
+import { BiHistory, BiCoinStack, BiEdit, BiUserX } from "react-icons/bi";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
-import { AiOutlineUser, AiOutlineEye } from "react-icons/ai";
+import { AiOutlineUser, AiOutlineEye, AiFillCheckCircle } from "react-icons/ai";
 import { Tooltip } from "@chakra-ui/react";
 import { useEffect, useState, useMemo } from "react";
 import { getAllUsers, updateUser, updateUserStatus } from "@/services/user";
 import { updateUserWallet } from "@/services/wallet";
+import { FaRegFrownOpen } from "react-icons/fa";
+import { GrVmMaintenance } from "react-icons/gr";
+import { ImBlocked } from "react-icons/im";
 
 let tempUsers: User[] = [];
 
@@ -202,6 +205,42 @@ const Usuarios = () => {
     }
   };
 
+  const NoStationsComponent = (): JSX.Element => {
+    return (
+      <Flex
+        width={"100%"}
+        justifyContent={"center"}
+        flexDirection={"column"}
+        alignItems={"center"}
+        padding={"5% 0%"}
+      >
+        <FaRegFrownOpen size={65} color={`${theme.colors.primary.main}`} />
+        <Text fontSize={24}>Nenhum usuário encontrado!</Text>
+      </Flex>
+    );
+  };
+
+  const HandleStationStatus = (status: any): JSX.Element => {
+    return (
+      <Td textTransform={"capitalize"} whiteSpace={"nowrap"}>
+        <Text display={"flex"} alignItems={"center"}>
+          <Text>{status}</Text>
+          {status === "active" ? (
+            <AiFillCheckCircle
+              size={20}
+              color="green"
+              style={{ marginLeft: 5 }}
+            />
+          ) : status === "inactive" ? (
+            <BiUserX size={20} color="red" style={{ marginLeft: 5 }} />
+          ) : (
+            <ImBlocked size={20} color="red" style={{ marginLeft: 5 }} />
+          )}
+        </Text>
+      </Td>
+    );
+  };
+
   return (
     <>
       <div>
@@ -257,103 +296,107 @@ const Usuarios = () => {
             <option value="0">Não Solicitou Moedas</option>
           </Select>
         </Flex>
-        <TableContainer
-          marginTop={3}
-          border="1px"
-          borderColor="gray.200"
-          borderRadius={"10"}
-          paddingY={5}
-          paddingX={3}
-          backgroundColor={`${theme.colors.white.main}`}
-        >
-          <Table variant="simple" size="sm">
-            <Thead>
-              <Tr>
-                <Th>Nome</Th>
-                <Th>Email</Th>
-                <Th>Status</Th>
-                <Th textAlign="end">Ações</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {users &&
-                users.map((usuario: User, index) => {
-                  return (
-                    <Tr key={`${usuario.cpf}-${usuario.email}`}>
-                      <Td>{usuario.name + " " + usuario.surname}</Td>
-                      <Td>{usuario.email}</Td>
-                      <Td
-                        style={{
-                          textTransform: "capitalize",
-                        }}
-                      >
-                        {usuario.status}
-                      </Td>
-                      <Td>
-                        <Flex justify={"flex-end"} gap={3}>
-                          {usuario.is_admin ? (
-                            <Tooltip
-                              label="Administrador"
-                              aria-label="Administrador"
-                            >
-                              <button>
-                                <MdOutlineAdminPanelSettings size={22} />
-                              </button>
-                            </Tooltip>
-                          ) : (
-                            <Tooltip label="Usuário" aria-label="Usuário">
-                              <button>
-                                <AiOutlineUser size={22} />
-                              </button>
-                            </Tooltip>
-                          )}
-                          {usuario?.wallet.qtdCreditosSolicitados > 0 ? (
-                            <Tooltip
-                              label="Usuário solicitou créditos"
-                              aria-label="Usuário solicitou créditos"
-                            >
-                              <button
-                                onClick={() => handleWalletUserModal(index)}
-                              >
-                                <BiCoinStack
-                                  size={20}
-                                  color={theme.colors.secundary.main}
-                                />
-                              </button>
-                            </Tooltip>
-                          ) : (
-                            <Tooltip label="Créditos" aria-label="Créditos">
-                              <button
-                                onClick={() => handleWalletUserModal(index)}
-                              >
-                                <BiCoinStack size={20} />
-                              </button>
-                            </Tooltip>
-                          )}
-                          <Tooltip label="Histórico" aria-label="Histórico">
-                            <button>
-                              <BiHistory size={22} />
-                            </button>
-                          </Tooltip>
+        {users.length >= 1 ? (
+          <TableContainer
+            marginTop={3}
+            border="1px"
+            borderColor="gray.200"
+            borderRadius={"10"}
+            paddingY={5}
+            paddingX={3}
+            backgroundColor={`${theme.colors.white.main}`}
+          >
+            <Table variant="simple" size="sm">
+              <Thead>
+                <Tr>
+                  <Th>Nome</Th>
+                  <Th>Email</Th>
+                  <Th>Status</Th>
+                  <Th textAlign="end">Ações</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {users &&
+                  users.map((usuario: User, index) => {
+                    return (
+                      <Tr key={`${usuario.cpf}-${usuario.email}`}>
+                        <Td>{usuario.name + " " + usuario.surname}</Td>
+                        <Td>{usuario.email}</Td>
 
-                          <Tooltip label="Visualizar" aria-label="Visualizar">
-                            <button onClick={() => handleViewUserModal(index)}>
-                              <AiOutlineEye size={22} />
-                            </button>
-                          </Tooltip>
-                          <Tooltip label="Editar" aria-label="Editar">
-                            <button onClick={() => handleEditUserModal(index)}>
-                              <BiEdit size={20} />
-                            </button>
-                          </Tooltip>
-                        </Flex>
-                      </Td>
-                    </Tr>
-                  );
-                })}
-            </Tbody>
-          </Table>
-        </TableContainer>
+                        {HandleStationStatus(usuario.status)}
+
+                        <Td>
+                          <Flex justify={"flex-end"} gap={3}>
+                            {usuario.is_admin ? (
+                              <Tooltip
+                                label="Administrador"
+                                aria-label="Administrador"
+                              >
+                                <button>
+                                  <MdOutlineAdminPanelSettings size={22} />
+                                </button>
+                              </Tooltip>
+                            ) : (
+                              <Tooltip label="Usuário" aria-label="Usuário">
+                                <button>
+                                  <AiOutlineUser size={22} />
+                                </button>
+                              </Tooltip>
+                            )}
+                            {usuario?.wallet.qtdCreditosSolicitados > 0 ? (
+                              <Tooltip
+                                label="Usuário solicitou créditos"
+                                aria-label="Usuário solicitou créditos"
+                              >
+                                <button
+                                  onClick={() => handleWalletUserModal(index)}
+                                >
+                                  <BiCoinStack
+                                    size={20}
+                                    color={theme.colors.secundary.main}
+                                  />
+                                </button>
+                              </Tooltip>
+                            ) : (
+                              <Tooltip label="Créditos" aria-label="Créditos">
+                                <button
+                                  onClick={() => handleWalletUserModal(index)}
+                                >
+                                  <BiCoinStack size={20} />
+                                </button>
+                              </Tooltip>
+                            )}
+                            <Tooltip label="Histórico" aria-label="Histórico">
+                              <button>
+                                <BiHistory size={22} />
+                              </button>
+                            </Tooltip>
+
+                            <Tooltip label="Visualizar" aria-label="Visualizar">
+                              <button
+                                onClick={() => handleViewUserModal(index)}
+                              >
+                                <AiOutlineEye size={22} />
+                              </button>
+                            </Tooltip>
+                            <Tooltip label="Editar" aria-label="Editar">
+                              <button
+                                onClick={() => handleEditUserModal(index)}
+                              >
+                                <BiEdit size={20} />
+                              </button>
+                            </Tooltip>
+                          </Flex>
+                        </Td>
+                      </Tr>
+                    );
+                  })}
+              </Tbody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <NoStationsComponent />
+        )}
       </div>
       <Modal
         isOpen={isWalletUserOpen}
