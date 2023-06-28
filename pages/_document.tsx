@@ -10,6 +10,7 @@ export default function Document() {
           integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
           crossOrigin=""
         />
+        <title>EletroGama</title>
       </Head>
       <body>
         <Main />
