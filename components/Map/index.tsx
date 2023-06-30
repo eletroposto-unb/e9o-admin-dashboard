@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import CustomPopup from "../CustomPopUp";
 
-export default function Map({ stations }) {
+export default function Map({ stations }: any) {
   return (
     <MapContainer
       center={[-15.988826153080108, -48.044526246024574]}
