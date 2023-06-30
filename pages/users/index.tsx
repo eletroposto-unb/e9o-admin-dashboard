@@ -248,7 +248,19 @@ const Usuarios = () => {
           </Select>
         </Flex>
         {users && users.length >= 1 ? (
-          <TableContainer marginTop={3} border="1px" borderColor="gray.200" borderRadius={"10"} paddingY={5} paddingX={3} backgroundColor={`${theme.colors.white.main}`}>
+          <TableContainer
+            marginTop={3}
+            border="1px"
+            borderColor="gray.200"
+            borderRadius={"10"}
+            paddingY={5}
+            paddingX={3}
+            backgroundColor={`${theme.colors.white.main}`}
+            sx={{
+              overflowY: "scroll",
+              height: "70vh",
+            }}
+          >
             <Table variant="simple" size="sm">
               <Thead>
                 <Tr>
@@ -283,7 +295,7 @@ const Usuarios = () => {
                                 </button>
                               </Tooltip>
                             )}
-                            {/* {usuario && usuario?.wallet.qtdCreditosSolicitados > 0 ? (
+                            {usuario && usuario?.wallet?.qtdCreditosSolicitados > 0 ? (
                               <Tooltip label="Usuário solicitou créditos" aria-label="Usuário solicitou créditos">
                                 <button onClick={() => handleWalletUserModal(index)}>
                                   <BiCoinStack size={20} color={theme.colors.secundary.main} />
@@ -295,7 +307,7 @@ const Usuarios = () => {
                                   <BiCoinStack size={20} />
                                 </button>
                               </Tooltip>
-                            )} */}
+                            )}
                             <Tooltip label="Histórico" aria-label="Histórico">
                               <button>
                                 <BiHistory size={22} />
