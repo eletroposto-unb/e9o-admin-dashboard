@@ -79,7 +79,6 @@ const Usuarios = () => {
   }, [searchStatus]);
 
   useMemo(() => {
-    console.log("search coin", users, searchCoin);
     let filteredResult: User[] = [];
     if (Number(searchCoin) === 0) {
       console.log("NAO SOLICITOU ");
@@ -271,7 +270,7 @@ const Usuarios = () => {
 
                         <Td>
                           <Flex justify={"flex-end"} gap={3}>
-                            {usuario.is_admin ? (
+                            {usuario && usuario.is_admin ? (
                               <Tooltip label="Administrador" aria-label="Administrador">
                                 <button>
                                   <MdOutlineAdminPanelSettings size={22} />
@@ -284,7 +283,7 @@ const Usuarios = () => {
                                 </button>
                               </Tooltip>
                             )}
-                            {usuario?.wallet.qtdCreditosSolicitados > 0 ? (
+                            {/* {usuario && usuario?.wallet.qtdCreditosSolicitados > 0 ? (
                               <Tooltip label="Usuário solicitou créditos" aria-label="Usuário solicitou créditos">
                                 <button onClick={() => handleWalletUserModal(index)}>
                                   <BiCoinStack size={20} color={theme.colors.secundary.main} />
@@ -296,7 +295,7 @@ const Usuarios = () => {
                                   <BiCoinStack size={20} />
                                 </button>
                               </Tooltip>
-                            )}
+                            )} */}
                             <Tooltip label="Histórico" aria-label="Histórico">
                               <button>
                                 <BiHistory size={22} />

@@ -14,7 +14,7 @@ function ChargeStationMap() {
   }, []);
 
   const handleChargeStations = async () => {
-    const stations = await getAllStations();
+    const stations = await getAllStations()
     setStations(stations?.value);
   };
 
