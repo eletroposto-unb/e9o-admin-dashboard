@@ -87,7 +87,7 @@ export const updateStation = async (
   idPosto: number
 ): Promise<Result<postFormData>> => {
   try {
-    const res = await api.put<formCarData>(
+    const res = await api.put<postFormData>(
       `stations/station/${idPosto}`,
       payload
     );

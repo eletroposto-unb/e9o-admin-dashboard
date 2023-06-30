@@ -1,8 +1,9 @@
 import { Popup } from "react-leaflet";
 import { Flex, Text, useTheme, Button } from "@chakra-ui/react";
 import { FiArrowRight } from "react-icons/fi";
+import React from "react";
 
-const CustomPopup = ({ currentStation }): JSX.Element => {
+const CustomPopup = ({ currentStation }: any): JSX.Element => {
   const theme = useTheme();
 
   const handleStatus = (status: string) => {

@@ -1,5 +1,6 @@
-import { AuthContext } from '@/context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 import { useRouter } from 'next/router';
+import React from 'react';
 import { useContext, useEffect } from 'react';
 
 interface AuthProtectProps {

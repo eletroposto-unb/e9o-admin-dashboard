@@ -32,11 +32,10 @@ import AuthProtect from "@/components/AuthProtect";
 import Navbar from "@/components/Navbar";
 import dynamic from "next/dynamic";
 import { createStation, getStation } from "@/services/station";
-import { Stations } from "@/dto/station.dto";
 import { StationEditDto } from "@/dto/stationEdit.dto";
 import { updateStation } from "../../services/station";
 
-const CurrentMap = dynamic(() => import("./currentMap"), {
+const CurrentMap = dynamic(() => import("../../components/CurrentMap"), {
   ssr: false,
 });
 
@@ -165,14 +164,12 @@ const CriarPosto = () => {
     if (!router.query.idPosto) {
       station = await createStation(payload);
       descricao = "A estação de carregamento foi cadastrada com sucesso!";
-      descricaoErro =
-        "Erro no cadastro da estação de carregamento. Tente novamente!";
+      descricaoErro = "Erro no cadastro da estação de carregamento. Tente novamente!";
       handleResetForm();
     } else {
       station = await updateStation(payload, Number(router.query.idPosto));
       descricao = "A estação de carregamento foi editada com sucesso!";
-      descricaoErro =
-        "Erro no cadastro da Estação de Carregamento. Tente novamente!";
+      descricaoErro = "Erro no cadastro da Estação de Carregamento. Tente novamente!";
     }
 
     if (station?.value?.station.idPosto) {
@@ -197,27 +194,15 @@ const CriarPosto = () => {
     return (
       <Popover>
         <PopoverTrigger>
-          <Button
-            fontSize={14}
-            backgroundColor={`${theme.colors.lightGray.main}`}
-            color={`${theme.colors.primary.main}`}
-          >
+          <Button fontSize={14} backgroundColor={`${theme.colors.lightGray.main}`} color={`${theme.colors.primary.main}`}>
             <MdLiveHelp size={30} />
           </Button>
         </PopoverTrigger>
-        <PopoverContent
-          zIndex={2}
-          backgroundColor={`${theme.colors.primary.main}`}
-        >
+        <PopoverContent zIndex={2} backgroundColor={`${theme.colors.primary.main}`}>
           <PopoverArrow />
           <PopoverCloseButton color={`${theme.colors.white.main}`} />
-          <PopoverBody
-            padding={"10% 5%"}
-            textAlign={"justify"}
-            color={`${theme.colors.white.main}`}
-          >
-            Marcar a localização no mapa é uma ferramenta extremamente útil que
-            auxilia os usuários a encontrar a estação de carregamento criada.
+          <PopoverBody padding={"10% 5%"} textAlign={"justify"} color={`${theme.colors.white.main}`}>
+            Marcar a localização no mapa é uma ferramenta extremamente útil que auxilia os usuários a encontrar a estação de carregamento criada.
           </PopoverBody>
         </PopoverContent>
       </Popover>
@@ -227,20 +212,8 @@ const CriarPosto = () => {
   return (
     <AuthProtect>
       <Navbar />
-      <Flex
-        w="100%"
-        minHeight={"calc(100vh - 74px)"}
-        h="auto"
-        flexDir="column"
-        padding="2% 10% 5% 10%"
-        backgroundColor={`${theme.colors.lightGray.main}`}
-      >
-        <BiArrowBack
-          size={25}
-          color={`${theme.colors.primary.main}`}
-          onClick={() => Router.back()}
-          style={{ cursor: "pointer", marginBottom: 10 }}
-        />
+      <Flex w="100%" minHeight={"calc(100vh - 74px)"} h="auto" flexDir="column" padding="2% 10% 5% 10%" backgroundColor={`${theme.colors.lightGray.main}`}>
+        <BiArrowBack size={25} color={`${theme.colors.primary.main}`} onClick={() => Router.back()} style={{ cursor: "pointer", marginBottom: 10 }} />
         <Text fontWeight={"bold"} fontSize={18}>
           {router.query.idPosto ? "Editar posto" : "Criar posto"}
         </Text>
@@ -310,19 +283,9 @@ const CriarPosto = () => {
             </Flex>
             <Flex width={"100%"} mt={2} zIndex={1}>
               {!loading ? (
-                <CurrentMap
-                  handleLatAndLng={handleLatAndLng}
-                  lat={position?.PLat}
-                  lng={position?.PLng}
-                />
+                <CurrentMap handleLatAndLng={handleLatAndLng} lat={position.PLat} lng={position.PLng} />
               ) : (
-                <Spinner
-                  thickness="4px"
-                  speed="0.65s"
-                  emptyColor="gray.200"
-                  color="blue.500"
-                  size="md"
-                />
+                <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="md" />
               )}
             </Flex>
             <Flex>
@@ -418,16 +381,10 @@ const CriarPosto = () => {
                       value={value}
                       onChange={onChange}
                     >
-                      <option value="Estacionamento Público">
-                        Estacionamento Público
-                      </option>
-                      <option value="Estacionamento Privado">
-                        Estacionamento Privado
-                      </option>
+                      <option value="Estacionamento Público">Estacionamento Público</option>
+                      <option value="Estacionamento Privado">Estacionamento Privado</option>
                       <option value="Shopping">Shooping</option>
-                      <option value="Faculdade/Universidade">
-                        Faculdade/Universidade
-                      </option>
+                      <option value="Faculdade/Universidade">Faculdade/Universidade</option>
                       <option value="Órgãos Públicos">Órgãos Públicos</option>
                       <option value="Loja">Loja</option>
                       <option value="Outro">Outro</option>
@@ -503,10 +460,7 @@ const CriarPosto = () => {
                         onChange={onChange}
                       />
                       <InputRightElement>
-                        <FaCoins
-                          color={`${theme.colors.secundary.main}`}
-                          size={20}
-                        />
+                        <FaCoins color={`${theme.colors.secundary.main}`} size={20} />
                       </InputRightElement>
                     </InputGroup>
                   )}
@@ -548,16 +502,14 @@ const CriarPosto = () => {
                 {errors?.cabo && (
                   <Alert status="warning" height={8} mt={2} fontSize={12}>
                     <AlertIcon />
-                    {errors.cabo.message}
+                    <>{errors.cabo.message}</>
                   </Alert>
                 )}
               </Flex>
             </Flex>
             <Flex>
               <Flex flexDirection={"column"} width={"100%"} mt={2}>
-                <Text fontSize={14}>
-                  Potencia aproximada de carregamento? (Em Khw)
-                </Text>
+                <Text fontSize={14}>Potencia aproximada de carregamento? (Em Khw)</Text>
                 <Controller
                   control={control}
                   name="potencia"
@@ -580,10 +532,7 @@ const CriarPosto = () => {
                         onChange={onChange}
                       />
                       <InputRightElement>
-                        <ImPowerCord
-                          color={`${theme.colors.secundary.main}`}
-                          size={20}
-                        />
+                        <ImPowerCord color={`${theme.colors.secundary.main}`} size={20} />
                       </InputRightElement>
                     </InputGroup>
                   )}
@@ -779,64 +728,27 @@ const CriarPosto = () => {
               )}
             </Flex>
             <Flex width={"100%"} height={"100%"}>
-              <Flex
-                flexDirection={"column"}
-                justifyContent={"flex-end"}
-                alignItems={"center"}
-                width={"100%"}
-              >
-                <Alert
-                  status="info"
-                  height={10}
-                  mt={2}
-                  fontSize={12}
-                  justifyContent={"center"}
-                  borderRadius={5}
-                >
+              <Flex flexDirection={"column"} justifyContent={"flex-end"} alignItems={"center"} width={"100%"}>
+                <Alert status="info" height={10} mt={2} fontSize={12} justifyContent={"center"} borderRadius={5}>
                   <AlertIcon />
-                  <Text>
-                    Ajude os usuários definindo precisamente o local no mapa.
-                  </Text>
+                  <Text>Ajude os usuários definindo precisamente o local no mapa.</Text>
                 </Alert>
               </Flex>
             </Flex>
           </Flex>
         </Flex>
-        <Flex
-          width={"100%"}
-          mt={5}
-          flexDirection={"column"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
+        <Flex width={"100%"} mt={5} flexDirection={"column"} alignItems={"center"} justifyContent={"center"}>
           <Button
             colorScheme="teal"
             w={250}
             h={10}
             backgroundColor={`${theme.colors.primary.main}`}
             onClick={handleSubmit(onSubmit)}
-            rightIcon={
-              loading && (
-                <Spinner
-                  thickness="4px"
-                  speed="0.65s"
-                  emptyColor="gray.200"
-                  color="blue.500"
-                  size="md"
-                />
-              )
-            }
+            rightIcon={loading ? <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="md" /> : <></>}
           >
             {loading ? "Salvando" : "Salvar"}
           </Button>
-          <Button
-            colorScheme="teal"
-            w={250}
-            h={10}
-            variant="link"
-            color={`${theme.colors.primary.main}`}
-            onClick={() => Router.back()}
-          >
+          <Button colorScheme="teal" w={250} h={10} variant="link" color={`${theme.colors.primary.main}`} onClick={() => Router.back()}>
             Cancelar
           </Button>
         </Flex>
