@@ -9,12 +9,6 @@ function getTokenFromLocalStorage() {
 
 const api = axios.create({
   baseURL: "https://api.eletrogama.online",
-  timeout: 5000,
-  withCredentials: true,
-  headers: {
-    "X-Requested-With": "XMLHttpRequest",
-    Authorization: "", // Remova o valor inicial em branco
-  },
 });
 
 api.interceptors.request.use((config) => {
