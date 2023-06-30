@@ -9,16 +9,22 @@ function getTokenFromLocalStorage() {
 
 const api = axios.create({
   baseURL: "https://api.eletrogama.online",
+  timeout: 5000,
+  withCredentials: true,
+  headers: {
+    "X-Requested-With": "XMLHttpRequest",
+    Authorization: "", // Remova o valor inicial em branco
+  },
 });
 
-// api.interceptors.request.use((config) => {
-//   const token = getTokenFromLocalStorage();
+api.interceptors.request.use((config) => {
+  const token = getTokenFromLocalStorage();
 
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
-//   return config;
-// });
+  return config;
+});
 
 export default api;
