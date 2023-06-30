@@ -11,14 +11,14 @@ const api = axios.create({
   baseURL: "https://api.eletrogama.online",
 });
 
-api.interceptors.request.use((config) => {
-  const token = getTokenFromLocalStorage();
+// api.interceptors.request.use((config) => {
+//   const token = getTokenFromLocalStorage();
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
 
-  return config;
-});
+//   return config;
+// });
 
 export default api;
