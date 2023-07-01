@@ -14,14 +14,11 @@ import {
   Tbody,
   Td,
   Text,
-  useToast,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import { GoSearch } from "react-icons/go";
 import { FaRegFrownOpen } from "react-icons/fa";
-import { Stations } from "@/dto/station.dto";
 
-const mockHistory = [
+let mockHistory = [
   {
     Eletroposto: "EletroPosto FGA UnB",
     Usuário: "Victor Samuel dos Santos Lucas",
@@ -31,38 +28,40 @@ const mockHistory = [
     Data_de_Saída: "2023-06-14 22:49:21",
   },
   {
-    Eletroposto: "EletroPosto FGA UnB",
+    Eletroposto: "EletroPosto FGA",
     Usuário: "Victor Samuel dos Santos Lucas",
     Carro: "Golf GTE",
-    Custo: 10,
-    Data_de_Entrada: "2023-06-14 22:49:21",
+    Custo: 11,
+    Data_de_Entrada: "2023-06-15 22:49:21",
     Data_de_Saída: "2023-06-14 22:49:21",
   },
   {
-    Eletroposto: "EletroPosto FGA UnB",
+    Eletroposto: "EletroPosto IFB",
     Usuário: "Victor Samuel dos Santos Lucas",
     Carro: "Golf GTE",
-    Custo: 10,
-    Data_de_Entrada: "2023-06-14 22:49:21",
+    Custo: 12,
+    Data_de_Entrada: "2023-06-25 22:49:21",
     Data_de_Saída: "2023-06-14 22:49:21",
   },
   {
-    Eletroposto: "EletroPosto FGA UnB",
+    Eletroposto: "EletroPosto Gammagiore",
     Usuário: "Victor Samuel dos Santos Lucas",
     Carro: "Golf GTE",
-    Custo: 10,
-    Data_de_Entrada: "2023-06-14 22:49:21",
+    Custo: 13,
+    Data_de_Entrada: "2023-06-21 22:49:21",
     Data_de_Saída: "2023-06-14 22:49:21",
   },
   {
-    Eletroposto: "EletroPosto FGA UnB",
+    Eletroposto: "EletroPosto IFB 2",
     Usuário: "Victor Samuel dos Santos Lucas",
     Carro: "Golf GTE",
-    Custo: 10,
-    Data_de_Entrada: "2023-06-14 22:49:21",
+    Custo: 14,
+    Data_de_Entrada: "2023-06-18 22:49:21",
     Data_de_Saída: "2023-06-14 22:49:21",
   },
 ];
+
+let historyData = [];
 
 const THeadData = [
   "Eletroposto",
@@ -72,11 +71,53 @@ const THeadData = [
   "Data de Entrada",
   "Data de Saída",
 ];
-let tempStations: Stations[] = [];
 
 function History() {
   const theme = useTheme();
-  const toast = useToast();
+  const [searchField, setSearchField] = useState("");
+  const [filterByPrice, setFilterByPrice] = useState("");
+  const [filterByDate, setFilterByDate] = useState("");
+
+  useMemo(() => {
+    if (searchField) {
+      const tableFiltered = mockHistory.filter((history) =>
+        history.Eletroposto.toLowerCase().includes(searchField.toLowerCase())
+      );
+      historyData = tableFiltered;
+    } else {
+      historyData = mockHistory;
+    }
+  }, [searchField]);
+
+  function comparePrice(a, b) {
+    if (a.Custo < b.Custo) return -1;
+    if (a.Custo > b.Custo) return 1;
+    return 0;
+  }
+
+  useMemo(() => {
+    if (filterByPrice === "Mais Caro")
+      historyData = mockHistory.sort(comparePrice).reverse();
+    else historyData = mockHistory.sort(comparePrice);
+  }, [filterByPrice]);
+
+  function sortByOldest(a, b) {
+    const dataEntradaA = new Date(a.Data_de_Entrada);
+    const dataEntradaB = new Date(b.Data_de_Entrada);
+    return dataEntradaA - dataEntradaB;
+  }
+
+  function sortByNewest(a, b) {
+    const dataEntradaA = new Date(a.Data_de_Entrada);
+    const dataEntradaB = new Date(b.Data_de_Entrada);
+    return dataEntradaB - dataEntradaA;
+  }
+
+  useMemo(() => {
+    if (filterByDate === "Mais Recente")
+      historyData = mockHistory.sort(sortByNewest);
+    else historyData = mockHistory.sort(sortByOldest);
+  }, [filterByDate]);
 
   const NoStationsComponent = (): JSX.Element => {
     return (
@@ -111,12 +152,12 @@ function History() {
           <Input
             placeholder="Buscar histórico por usuário ou posto"
             color={`${theme.colors.lightBlack.main}`}
-            onChange={(e) => console.log(e.target.value)}
+            onChange={(e) => setSearchField(e.target.value)}
             fontSize={14}
           />
         </InputGroup>
         <Select
-          placeholder="Ordenar por Custo"
+          placeholder="Custo"
           borderRadius={"5"}
           width={"20%"}
           size={"md"}
@@ -125,14 +166,14 @@ function History() {
           borderWidth={0}
           backgroundColor={`${theme.colors.white.main}`}
           color={`${theme.colors.lightBlack.main}`}
-          onChange={(e) => console.log(e.target.value)}
+          onChange={(e) => setFilterByPrice(e.target.value)}
           fontSize={14}
         >
           <option value="Mais Caro">Mais Caro</option>
           <option value="Mais Barato">Mais Barato</option>
         </Select>
         <Select
-          placeholder="Ordenar por Data"
+          placeholder="Data de Entrada"
           borderRadius={"5"}
           size={"md"}
           width={"20%"}
@@ -142,14 +183,14 @@ function History() {
           backgroundColor={`${theme.colors.white.main}`}
           color={`${theme.colors.lightBlack.main}`}
           fontSize={14}
-          onChange={(e) => console.log(e.target.value)}
+          onChange={(e) => setFilterByDate(e.target.value)}
         >
           <option value="Mais Recente">Mais Recente</option>
           <option value="Mais Antigo">Mais Antigo</option>
         </Select>
       </Flex>
       <Flex width={"100%"} marginTop={3}>
-        {mockHistory?.length >= 1 ? (
+        {historyData?.length >= 1 ? (
           <TableContainer
             width={"100%"}
             paddingY={5}
@@ -171,7 +212,7 @@ function History() {
                 })}
               </Thead>
               <Tbody>
-                {mockHistory.map((history, index) => {
+                {historyData.map((history, index) => {
                   return (
                     <Tr key={`${index}-${history?.Usuário}`}>
                       <Td>{history.Eletroposto}</Td>
