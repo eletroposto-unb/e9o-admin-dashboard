@@ -8,7 +8,7 @@ function getTokenFromLocalStorage() {
 }
 
 const api = axios.create({
-  baseURL: "https://api.eletrogama.online",
+  baseURL: "http://192.168.1.5:8080",
   timeout: 5000,
   withCredentials: true,
   headers: {

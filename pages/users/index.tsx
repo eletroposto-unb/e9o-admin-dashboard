@@ -18,7 +18,15 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react";
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, useToast } from "@chakra-ui/react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  useToast,
+} from "@chakra-ui/react";
 import { GoSearch } from "react-icons/go";
 import { BiHistory, BiCoinStack, BiEdit, BiUserX } from "react-icons/bi";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
@@ -41,9 +49,21 @@ const Usuarios = () => {
   const [searchStatus, setSearchStatus] = useState<string>("");
   const [searchField, setSearchField] = useState<string>("");
   const [searchCoin, setSearchCoin] = useState<string>("");
-  const { isOpen: isEditUserOpen, onOpen: onEditUserOpen, onClose: onEditUserClose } = useDisclosure();
-  const { isOpen: isViewUserOpen, onOpen: onViewUserOpen, onClose: onViewUserClose } = useDisclosure();
-  const { isOpen: isWalletUserOpen, onOpen: onWalletUserOpen, onClose: onWalletUserClose } = useDisclosure();
+  const {
+    isOpen: isEditUserOpen,
+    onOpen: onEditUserOpen,
+    onClose: onEditUserClose,
+  } = useDisclosure();
+  const {
+    isOpen: isViewUserOpen,
+    onOpen: onViewUserOpen,
+    onClose: onViewUserClose,
+  } = useDisclosure();
+  const {
+    isOpen: isWalletUserOpen,
+    onOpen: onWalletUserOpen,
+    onClose: onWalletUserClose,
+  } = useDisclosure();
 
   const handleEditUserModal = (index: number) => {
     setUserModalData(users[index]);
@@ -73,7 +93,9 @@ const Usuarios = () => {
   }, [searchField]);
 
   useMemo(() => {
-    const filteredResult = tempUsers.filter((user) => user.status == searchStatus);
+    const filteredResult = tempUsers.filter(
+      (user) => user.status == searchStatus
+    );
     setUsers(filteredResult);
     if (!searchStatus) handleGetAllUsers();
   }, [searchStatus]);
@@ -82,10 +104,14 @@ const Usuarios = () => {
     let filteredResult: User[] = [];
     if (Number(searchCoin) === 0) {
       console.log("NAO SOLICITOU ");
-      filteredResult = tempUsers.filter((user) => user?.wallet?.qtdCreditosSolicitados === Number(searchCoin));
+      filteredResult = tempUsers.filter(
+        (user) => user?.wallet?.qtdCreditosSolicitados === Number(searchCoin)
+      );
     } else {
       console.log(" SOLICITOU ");
-      filteredResult = tempUsers.filter((user) => user?.wallet?.qtdCreditosSolicitados > Number(searchCoin));
+      filteredResult = tempUsers.filter(
+        (user) => user?.wallet?.qtdCreditosSolicitados > Number(searchCoin)
+      );
     }
     setUsers(filteredResult);
     if (!searchCoin) handleGetAllUsers();
@@ -180,7 +206,13 @@ const Usuarios = () => {
 
   const NoStationsComponent = (): JSX.Element => {
     return (
-      <Flex width={"100%"} justifyContent={"center"} flexDirection={"column"} alignItems={"center"} padding={"5% 0%"}>
+      <Flex
+        width={"100%"}
+        justifyContent={"center"}
+        flexDirection={"column"}
+        alignItems={"center"}
+        padding={"5% 0%"}
+      >
         <FaRegFrownOpen size={65} color={`${theme.colors.primary.main}`} />
         <Text fontSize={24}>Nenhum usuário encontrado!</Text>
       </Flex>
@@ -193,7 +225,11 @@ const Usuarios = () => {
         <Text display={"flex"} alignItems={"center"}>
           <Text>{status}</Text>
           {status === "active" ? (
-            <AiFillCheckCircle size={20} color="green" style={{ marginLeft: 5 }} />
+            <AiFillCheckCircle
+              size={20}
+              color="green"
+              style={{ marginLeft: 5 }}
+            />
           ) : status === "inactive" ? (
             <BiUserX size={20} color="red" style={{ marginLeft: 5 }} />
           ) : (
@@ -208,11 +244,23 @@ const Usuarios = () => {
     <>
       <div>
         <Flex flexDirection={"row"}>
-          <InputGroup width={"60%"} mr={"1"} size={"md"} borderRadius={"5"} borderWidth={0} backgroundColor={`${theme.colors.white.main}`}>
+          <InputGroup
+            width={"60%"}
+            mr={"1"}
+            size={"md"}
+            borderRadius={"5"}
+            borderWidth={0}
+            backgroundColor={`${theme.colors.white.main}`}
+          >
             <InputRightElement className="InputLeft" pointerEvents="none">
               <GoSearch size={20} color={`${theme.colors.lightBlack.main}`} />
             </InputRightElement>
-            <Input placeholder="Buscar usuários" color={`${theme.colors.lightBlack.main}`} onChange={(e) => setSearchField(e.target.value)} fontSize={14} />
+            <Input
+              placeholder="Buscar usuários"
+              color={`${theme.colors.lightBlack.main}`}
+              onChange={(e) => setSearchField(e.target.value)}
+              fontSize={14}
+            />
           </InputGroup>
           <Select
             placeholder="Selecionar Status"
@@ -257,8 +305,8 @@ const Usuarios = () => {
             paddingX={3}
             backgroundColor={`${theme.colors.white.main}`}
             sx={{
-              overflowY: "scroll",
-              height: "70vh",
+              overflowY: users.length >= 6 && "scroll",
+              height: "auto",
             }}
           >
             <Table variant="simple" size="sm">
@@ -283,7 +331,10 @@ const Usuarios = () => {
                         <Td>
                           <Flex justify={"flex-end"} gap={3}>
                             {usuario && usuario.is_admin ? (
-                              <Tooltip label="Administrador" aria-label="Administrador">
+                              <Tooltip
+                                label="Administrador"
+                                aria-label="Administrador"
+                              >
                                 <button>
                                   <MdOutlineAdminPanelSettings size={22} />
                                 </button>
@@ -295,15 +346,26 @@ const Usuarios = () => {
                                 </button>
                               </Tooltip>
                             )}
-                            {usuario && usuario?.wallet?.qtdCreditosSolicitados > 0 ? (
-                              <Tooltip label="Usuário solicitou créditos" aria-label="Usuário solicitou créditos">
-                                <button onClick={() => handleWalletUserModal(index)}>
-                                  <BiCoinStack size={20} color={theme.colors.secundary.main} />
+                            {usuario &&
+                            usuario?.wallet?.qtdCreditosSolicitados > 0 ? (
+                              <Tooltip
+                                label="Usuário solicitou créditos"
+                                aria-label="Usuário solicitou créditos"
+                              >
+                                <button
+                                  onClick={() => handleWalletUserModal(index)}
+                                >
+                                  <BiCoinStack
+                                    size={20}
+                                    color={theme.colors.secundary.main}
+                                  />
                                 </button>
                               </Tooltip>
                             ) : (
                               <Tooltip label="Créditos" aria-label="Créditos">
-                                <button onClick={() => handleWalletUserModal(index)}>
+                                <button
+                                  onClick={() => handleWalletUserModal(index)}
+                                >
                                   <BiCoinStack size={20} />
                                 </button>
                               </Tooltip>
@@ -315,12 +377,16 @@ const Usuarios = () => {
                             </Tooltip>
 
                             <Tooltip label="Visualizar" aria-label="Visualizar">
-                              <button onClick={() => handleViewUserModal(index)}>
+                              <button
+                                onClick={() => handleViewUserModal(index)}
+                              >
                                 <AiOutlineEye size={22} />
                               </button>
                             </Tooltip>
                             <Tooltip label="Editar" aria-label="Editar">
-                              <button onClick={() => handleEditUserModal(index)}>
+                              <button
+                                onClick={() => handleEditUserModal(index)}
+                              >
                                 <BiEdit size={20} />
                               </button>
                             </Tooltip>
@@ -336,46 +402,97 @@ const Usuarios = () => {
           <NoStationsComponent />
         )}
       </div>
-      <Modal isOpen={isWalletUserOpen} onClose={handleWalletUserModalClose} isCentered>
+      <Modal
+        isOpen={isWalletUserOpen}
+        onClose={handleWalletUserModalClose}
+        isCentered
+      >
         <ModalOverlay />
-        <ModalContent backgroundColor={`${theme.colors.white.main}`} paddingBottom={2}>
+        <ModalContent
+          backgroundColor={`${theme.colors.white.main}`}
+          paddingBottom={2}
+        >
           <ModalHeader>Carteira do Usuário</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Flex direction={"column"} gap={3}>
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Nome
                 </Text>
-                <Input placeholder="Nome" color={`${theme.colors.lightBlack.main}`} fontSize={14} disabled defaultValue={userModalData.name + " " + userModalData.surname} />
+                <Input
+                  placeholder="Nome"
+                  color={`${theme.colors.lightBlack.main}`}
+                  fontSize={14}
+                  disabled
+                  defaultValue={
+                    userModalData.name + " " + userModalData.surname
+                  }
+                />
               </Flex>
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   CPF
                 </Text>
-                <Input placeholder="Cpf" color={`${theme.colors.lightBlack.main}`} fontSize={14} disabled defaultValue={userModalData.cpf} />
+                <Input
+                  placeholder="Cpf"
+                  color={`${theme.colors.lightBlack.main}`}
+                  fontSize={14}
+                  disabled
+                  defaultValue={userModalData.cpf}
+                />
               </Flex>
               <Text fontSize={theme.fonts.modalTitle.size} textAlign={"center"}>
                 Dados da Carteira
               </Text>
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Quantidade atual de Créditos
                 </Text>
                 <InputGroup>
-                  <InputLeftElement pointerEvents="none" fontSize="1.2em" bgColor={"#eaeaea"} textColor={theme.colors.white.main}>
+                  <InputLeftElement
+                    pointerEvents="none"
+                    fontSize="1.2em"
+                    bgColor={"#eaeaea"}
+                    textColor={theme.colors.white.main}
+                  >
                     $
                   </InputLeftElement>
-                  <Input placeholder="Créditos atuais" type="number" disabled color={`${theme.colors.black.main}`} marginLeft={1} fontSize={14} defaultValue={userModalData.wallet?.qtdCreditos} />
+                  <Input
+                    placeholder="Créditos atuais"
+                    type="number"
+                    disabled
+                    color={`${theme.colors.black.main}`}
+                    marginLeft={1}
+                    fontSize={14}
+                    defaultValue={userModalData.wallet?.qtdCreditos}
+                  />
                 </InputGroup>
               </Flex>
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Créditos solicitados
                 </Text>
 
                 <InputGroup>
-                  <InputLeftElement pointerEvents="none" fontSize="1.2em" bgColor={"#eaeaea"} textColor={theme.colors.white.main}>
+                  <InputLeftElement
+                    pointerEvents="none"
+                    fontSize="1.2em"
+                    bgColor={"#eaeaea"}
+                    textColor={theme.colors.white.main}
+                  >
                     $
                   </InputLeftElement>
                   <Input
@@ -389,11 +506,30 @@ const Usuarios = () => {
                   />
                 </InputGroup>
 
-                <Flex direction={"column"} gap={4} width={"100%"} justifyContent={"center"} alignItems={"center"} flexDirection={"row"} mt={3} paddingTop={5}>
-                  <Button width={"40%"} backgroundColor={`${theme.colors.primary.main}`} color={`${theme.colors.white.main}`} onClick={onSubmitAccepted}>
+                <Flex
+                  direction={"column"}
+                  gap={4}
+                  width={"100%"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  flexDirection={"row"}
+                  mt={3}
+                  paddingTop={5}
+                >
+                  <Button
+                    width={"40%"}
+                    backgroundColor={`${theme.colors.primary.main}`}
+                    color={`${theme.colors.white.main}`}
+                    onClick={onSubmitAccepted}
+                  >
                     Aceitar
                   </Button>
-                  <Button width={"40%"} backgroundColor={`${theme.colors.secundary.main}`} color={`${theme.colors.white.main}`} onClick={onSubmitRecused}>
+                  <Button
+                    width={"40%"}
+                    backgroundColor={`${theme.colors.secundary.main}`}
+                    color={`${theme.colors.white.main}`}
+                    onClick={onSubmitRecused}
+                  >
                     Recusar
                   </Button>
                 </Flex>
@@ -402,40 +538,90 @@ const Usuarios = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Modal isOpen={isViewUserOpen} onClose={handleViewUserModalClose} isCentered>
+      <Modal
+        isOpen={isViewUserOpen}
+        onClose={handleViewUserModalClose}
+        isCentered
+      >
         <ModalOverlay />
-        <ModalContent backgroundColor={`${theme.colors.white.main}`} paddingBottom={10}>
+        <ModalContent
+          backgroundColor={`${theme.colors.white.main}`}
+          paddingBottom={10}
+        >
           <ModalHeader>Visualizar Usuário</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Flex direction={"column"} gap={3}>
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Nome
                 </Text>
-                <Input placeholder="Nome" color={`${theme.colors.lightBlack.main}`} fontSize={14} disabled defaultValue={userModalData.name} />
+                <Input
+                  placeholder="Nome"
+                  color={`${theme.colors.lightBlack.main}`}
+                  fontSize={14}
+                  disabled
+                  defaultValue={userModalData.name}
+                />
               </Flex>
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   CPF
                 </Text>
 
-                <Input placeholder="Nome" color={`${theme.colors.lightBlack.main}`} fontSize={14} disabled defaultValue={userModalData.cpf} />
+                <Input
+                  placeholder="Nome"
+                  color={`${theme.colors.lightBlack.main}`}
+                  fontSize={14}
+                  disabled
+                  defaultValue={userModalData.cpf}
+                />
               </Flex>
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Email
                 </Text>
-                <Input placeholder="Nome" color={`${theme.colors.lightBlack.main}`} fontSize={14} disabled defaultValue={userModalData.email} />
+                <Input
+                  placeholder="Nome"
+                  color={`${theme.colors.lightBlack.main}`}
+                  fontSize={14}
+                  disabled
+                  defaultValue={userModalData.email}
+                />
               </Flex>
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Telefone
                 </Text>
-                <Input placeholder="Nome" color={`${theme.colors.lightBlack.main}`} fontSize={14} disabled defaultValue={userModalData.telefone ? userModalData.telefone : `Não cadastrado`} />
+                <Input
+                  placeholder="Nome"
+                  color={`${theme.colors.lightBlack.main}`}
+                  fontSize={14}
+                  disabled
+                  defaultValue={
+                    userModalData.telefone
+                      ? userModalData.telefone
+                      : `Não cadastrado`
+                  }
+                />
               </Flex>
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Status
                 </Text>
                 <Input
@@ -450,16 +636,28 @@ const Usuarios = () => {
                 ></Input>
               </Flex>
               <Flex gap={3}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Admin
                 </Text>
-                <Checkbox disabled colorScheme="green" defaultChecked={userModalData.is_admin} checked={userModalData.is_admin} />
+                <Checkbox
+                  disabled
+                  colorScheme="green"
+                  defaultChecked={userModalData.is_admin}
+                  checked={userModalData.is_admin}
+                />
               </Flex>
             </Flex>
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Modal isOpen={isEditUserOpen} onClose={handleEditUserModalClose} isCentered>
+      <Modal
+        isOpen={isEditUserOpen}
+        onClose={handleEditUserModalClose}
+        isCentered
+      >
         <ModalOverlay />
         <ModalContent backgroundColor={`${theme.colors.white.main}`}>
           <ModalHeader>Editar Usuário</ModalHeader>
@@ -467,14 +665,26 @@ const Usuarios = () => {
           <ModalBody>
             <Flex direction={"column"} gap={3}>
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Nome
                 </Text>
-                <Input placeholder="Nome" color={`${theme.colors.lightBlack.main}`} fontSize={14} disabled defaultValue={userModalData.name} />
+                <Input
+                  placeholder="Nome"
+                  color={`${theme.colors.lightBlack.main}`}
+                  fontSize={14}
+                  disabled
+                  defaultValue={userModalData.name}
+                />
               </Flex>
 
               <Flex direction={"column"} gap={0.5}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Status
                 </Text>
                 <Select
@@ -504,7 +714,10 @@ const Usuarios = () => {
                 </Select>
               </Flex>
               <Flex gap={3}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Admin
                 </Text>
                 <Checkbox
