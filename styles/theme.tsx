@@ -32,6 +32,9 @@ export const theme = extendTheme({
     warning: {
       main: "#E2B93B",
     },
+    totemData: {
+      main: "#008000",
+    },
   },
   fonts: {
     modalLabel: {
