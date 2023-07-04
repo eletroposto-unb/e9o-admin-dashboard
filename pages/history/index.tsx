@@ -77,8 +77,8 @@ function History() {
 
   useMemo(() => {
     if (filterByPrice === "Mais Caro")
-      historyData = histories.sort(comparePrice).reverse();
-    else historyData = histories.sort(comparePrice);
+      historyData = historyData.sort(comparePrice).reverse();
+    else historyData = historyData.sort(comparePrice);
   }, [filterByPrice]);
 
   function sortByOldest(a, b) {
@@ -95,8 +95,8 @@ function History() {
 
   useMemo(() => {
     if (filterByDate === "Mais Recente")
-      historyData = histories.sort(sortByNewest);
-    else historyData = histories.sort(sortByOldest);
+      historyData = historyData.sort(sortByNewest);
+    else historyData = historyData.sort(sortByOldest);
   }, [filterByDate]);
 
   const NoStationsComponent = (): JSX.Element => {
@@ -119,7 +119,7 @@ function History() {
     <Flex w="100%" h="80vh" flexDir="column">
       <Flex flexDirection={"row"}>
         <InputGroup
-          width={"60%"}
+          width={"40%"}
           mr={"1"}
           size={"md"}
           borderRadius={"5"}
@@ -136,6 +136,22 @@ function History() {
             fontSize={14}
           />
         </InputGroup>
+        <Select
+          placeholder="Posto"
+          borderRadius={"5"}
+          width={"20%"}
+          size={"md"}
+          ml={"1"}
+          mr={"1"}
+          borderWidth={0}
+          backgroundColor={`${theme.colors.white.main}`}
+          color={`${theme.colors.lightBlack.main}`}
+          onChange={(e) => setFilterByPrice(e.target.value)}
+          fontSize={14}
+        >
+          <option value="Mais Caro">Mais Caro</option>
+          <option value="Mais Barato">Mais Barato</option>
+        </Select>
         <Select
           placeholder="Custo"
           borderRadius={"5"}
@@ -199,7 +215,9 @@ function History() {
                       <Td>
                         {`${history.usuario.name} ${history.usuario.surname}`}
                       </Td>
-                      <Td>{history.Carro}</Td>
+                      <Td>
+                        {history.carro.modelo} - {history.carro.placa}{" "}
+                      </Td>
                       <Td textAlign={"center"}>{history.valorTotal} Moedas</Td>
                       <Td>{handleFormatDate(history.horarioEntrada)}</Td>
                       <Td>{handleFormatDate(history.horarioSaida)}</Td>
