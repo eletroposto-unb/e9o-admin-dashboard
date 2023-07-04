@@ -17,49 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { GoSearch } from "react-icons/go";
 import { FaRegFrownOpen } from "react-icons/fa";
-
-let mockHistory = [
-  {
-    Eletroposto: "EletroPosto FGA UnB",
-    Usuário: "Victor Samuel dos Santos Lucas",
-    Carro: "Golf GTE",
-    Custo: 10,
-    Data_de_Entrada: "2023-06-14 22:49:21",
-    Data_de_Saída: "2023-06-14 22:49:21",
-  },
-  {
-    Eletroposto: "EletroPosto FGA",
-    Usuário: "Victor Samuel dos Santos Lucas",
-    Carro: "Golf GTE",
-    Custo: 11,
-    Data_de_Entrada: "2023-06-15 22:49:21",
-    Data_de_Saída: "2023-06-14 22:49:21",
-  },
-  {
-    Eletroposto: "EletroPosto IFB",
-    Usuário: "Victor Samuel dos Santos Lucas",
-    Carro: "Golf GTE",
-    Custo: 12,
-    Data_de_Entrada: "2023-06-25 22:49:21",
-    Data_de_Saída: "2023-06-14 22:49:21",
-  },
-  {
-    Eletroposto: "EletroPosto Gammagiore",
-    Usuário: "Victor Samuel dos Santos Lucas",
-    Carro: "Golf GTE",
-    Custo: 13,
-    Data_de_Entrada: "2023-06-21 22:49:21",
-    Data_de_Saída: "2023-06-14 22:49:21",
-  },
-  {
-    Eletroposto: "EletroPosto IFB 2",
-    Usuário: "Victor Samuel dos Santos Lucas",
-    Carro: "Golf GTE",
-    Custo: 14,
-    Data_de_Entrada: "2023-06-18 22:49:21",
-    Data_de_Saída: "2023-06-14 22:49:21",
-  },
-];
+import { getAllHistories } from "@/services/history";
 
 let historyData = [];
 
@@ -77,46 +35,68 @@ function History() {
   const [searchField, setSearchField] = useState("");
   const [filterByPrice, setFilterByPrice] = useState("");
   const [filterByDate, setFilterByDate] = useState("");
+  const [histories, setHistories] = useState<History[]>([]);
+
+  useEffect(() => {
+    handleAllHistories();
+  }, []);
+
+  const handleAllHistories = async () => {
+    const histories = await getAllHistories();
+    setHistories(histories.value.history);
+    historyData = histories.value.history;
+  };
+
+  const handleFormatDate = (date: Date) => {
+    const dataObj = new Date(date);
+    const dia = dataObj.getDate().toString().padStart(2, "0");
+    const mes = (dataObj.getMonth() + 1).toString().padStart(2, "0");
+    const ano = dataObj.getFullYear().toString();
+    const hora = dataObj.getHours().toString().padStart(2, "0");
+    const minuto = dataObj.getMinutes().toString().padStart(2, "0");
+    const segundo = dataObj.getSeconds().toString().padStart(2, "0");
+    return `${dia}/${mes}/${ano} ${hora}:${minuto}:${segundo}`;
+  };
 
   useMemo(() => {
     if (searchField) {
-      const tableFiltered = mockHistory.filter((history) =>
-        history.Eletroposto.toLowerCase().includes(searchField.toLowerCase())
+      const tableFiltered = histories.filter((history) =>
+        history.posto.nome.toLowerCase().includes(searchField.toLowerCase())
       );
       historyData = tableFiltered;
     } else {
-      historyData = mockHistory;
+      historyData = histories;
     }
   }, [searchField]);
 
   function comparePrice(a, b) {
-    if (a.Custo < b.Custo) return -1;
-    if (a.Custo > b.Custo) return 1;
+    if (a.valorTotal < b.valorTotal) return -1;
+    if (a.valorTotal > b.valorTotal) return 1;
     return 0;
   }
 
   useMemo(() => {
     if (filterByPrice === "Mais Caro")
-      historyData = mockHistory.sort(comparePrice).reverse();
-    else historyData = mockHistory.sort(comparePrice);
+      historyData = histories.sort(comparePrice).reverse();
+    else historyData = histories.sort(comparePrice);
   }, [filterByPrice]);
 
   function sortByOldest(a, b) {
-    const dataEntradaA = new Date(a.Data_de_Entrada);
-    const dataEntradaB = new Date(b.Data_de_Entrada);
+    const dataEntradaA = new Date(a.horarioEntrada);
+    const dataEntradaB = new Date(b.horarioSaida);
     return dataEntradaA - dataEntradaB;
   }
 
   function sortByNewest(a, b) {
-    const dataEntradaA = new Date(a.Data_de_Entrada);
-    const dataEntradaB = new Date(b.Data_de_Entrada);
+    const dataEntradaA = new Date(a.horarioEntrada);
+    const dataEntradaB = new Date(b.horarioSaida);
     return dataEntradaB - dataEntradaA;
   }
 
   useMemo(() => {
     if (filterByDate === "Mais Recente")
-      historyData = mockHistory.sort(sortByNewest);
-    else historyData = mockHistory.sort(sortByOldest);
+      historyData = histories.sort(sortByNewest);
+    else historyData = histories.sort(sortByOldest);
   }, [filterByDate]);
 
   const NoStationsComponent = (): JSX.Element => {
@@ -190,7 +170,7 @@ function History() {
         </Select>
       </Flex>
       <Flex width={"100%"} marginTop={3}>
-        {historyData?.length >= 1 ? (
+        {historyData.length >= 1 ? (
           <TableContainer
             width={"100%"}
             paddingY={5}
@@ -212,15 +192,17 @@ function History() {
                 })}
               </Thead>
               <Tbody>
-                {historyData.map((history, index) => {
+                {historyData?.map((history, index) => {
                   return (
                     <Tr key={`${index}-${history?.Usuário}`}>
-                      <Td>{history.Eletroposto}</Td>
-                      <Td>{history.Usuário}</Td>
+                      <Td>{history.posto.nome}</Td>
+                      <Td>
+                        {`${history.usuario.name} ${history.usuario.surname}`}
+                      </Td>
                       <Td>{history.Carro}</Td>
-                      <Td textAlign={"center"}>{history.Custo} Moedas</Td>
-                      <Td>{history.Data_de_Entrada}</Td>
-                      <Td>{history.Data_de_Saída}</Td>
+                      <Td textAlign={"center"}>{history.valorTotal} Moedas</Td>
+                      <Td>{handleFormatDate(history.horarioEntrada)}</Td>
+                      <Td>{handleFormatDate(history.horarioSaida)}</Td>
                     </Tr>
                   );
                 })}

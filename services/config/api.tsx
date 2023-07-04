@@ -8,7 +8,7 @@ function getTokenFromLocalStorage() {
 }
 
 const api = axios.create({
-  baseURL: "http://192.168.1.5:8080",
+  baseURL: "http://localhost:8081",
   timeout: 5000,
   withCredentials: true,
   headers: {
