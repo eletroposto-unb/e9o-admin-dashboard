@@ -46,5 +46,13 @@ declare global {
     wallet: Wallet;
   };
 
+  type History = {
+    horarioEntrada: Date;
+    horarioSaida: Date;
+    valorTotal: number;
+    idPosto: number;
+    cpf: string;
+  };
+
   type Result<T> = ResultSuccess<T> | ResultError;
 }
