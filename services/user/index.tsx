@@ -17,6 +17,23 @@ export const getUser = async (firebase_uid: string): Promise<Result<User>> => {
   }
 };
 
+export const getUserByCpf = async (cpf: string): Promise<Result<User>> => {
+  try {
+    const res = await api.get<User>(`/users/user/cpf/${cpf}`);
+
+    return { type: "success", value: res.data } as unknown as Result<User>;
+  } catch (error) {
+    if (error instanceof Error)
+      return { type: "error", error, value: undefined };
+
+    return {
+      type: "error",
+      error: new Error("Erro desconhecido"),
+      value: undefined,
+    };
+  }
+};
+
 export const getAllUsers = async (): Promise<Result<User[]>> => {
   try {
     const res = await api.get<User[]>(`/users/`);

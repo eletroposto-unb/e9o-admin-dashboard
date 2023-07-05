@@ -27,6 +27,7 @@ import {
   ModalCloseButton,
   useToast,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { GoSearch } from "react-icons/go";
 import { BiHistory, BiCoinStack, BiEdit, BiUserX } from "react-icons/bi";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
@@ -36,7 +37,6 @@ import { useEffect, useState, useMemo } from "react";
 import { getAllUsers, updateUser, updateUserStatus } from "@/services/user";
 import { updateUserWallet } from "@/services/wallet";
 import { FaRegFrownOpen } from "react-icons/fa";
-import { GrVmMaintenance } from "react-icons/gr";
 import { ImBlocked } from "react-icons/im";
 
 let tempUsers: User[] = [];
@@ -44,6 +44,7 @@ let tempUsers: User[] = [];
 const Usuarios = () => {
   const theme = useTheme();
   const toast = useToast();
+  const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [userModalData, setUserModalData] = useState<User>({} as User);
   const [searchStatus, setSearchStatus] = useState<string>("");
@@ -323,29 +324,39 @@ const Usuarios = () => {
                   users.map((usuario: User, index) => {
                     return (
                       <Tr key={`${usuario.cpf}-${usuario.email}`}>
-                        <Td>{usuario.name + " " + usuario.surname}</Td>
+                        <Td verticalAlign={"middle"}>
+                          {usuario.name + " " + usuario.surname}{" "}
+                          {usuario && usuario.is_admin ? (
+                            <Tooltip
+                              label="Administrador"
+                              aria-label="Administrador"
+                            >
+                              <button
+                                style={{
+                                  verticalAlign: "middle",
+                                }}
+                              >
+                                <MdOutlineAdminPanelSettings size={18} />
+                              </button>
+                            </Tooltip>
+                          ) : (
+                            <Tooltip label="Usuário" aria-label="Usuário">
+                              <button
+                                style={{
+                                  verticalAlign: "middle",
+                                }}
+                              >
+                                <AiOutlineUser size={18} />
+                              </button>
+                            </Tooltip>
+                          )}
+                        </Td>
                         <Td>{usuario.email}</Td>
 
                         {HandleStationStatus(usuario.status)}
 
                         <Td>
                           <Flex justify={"flex-end"} gap={3}>
-                            {usuario && usuario.is_admin ? (
-                              <Tooltip
-                                label="Administrador"
-                                aria-label="Administrador"
-                              >
-                                <button>
-                                  <MdOutlineAdminPanelSettings size={22} />
-                                </button>
-                              </Tooltip>
-                            ) : (
-                              <Tooltip label="Usuário" aria-label="Usuário">
-                                <button>
-                                  <AiOutlineUser size={22} />
-                                </button>
-                              </Tooltip>
-                            )}
                             {usuario &&
                             usuario?.wallet?.qtdCreditosSolicitados > 0 ? (
                               <Tooltip
@@ -372,7 +383,18 @@ const Usuarios = () => {
                             )}
                             <Tooltip label="Histórico" aria-label="Histórico">
                               <button>
-                                <BiHistory size={22} />
+                                <BiHistory
+                                  size={22}
+                                  onClick={() =>
+                                    router.push({
+                                      pathname: "/userHistory",
+                                      query: {
+                                        cpf: `${usuario.cpf}`,
+                                        name: `${usuario.name}  ${usuario.surname}`,
+                                      },
+                                    })
+                                  }
+                                />
                               </button>
                             </Tooltip>
 
