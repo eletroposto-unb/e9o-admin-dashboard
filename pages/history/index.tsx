@@ -18,6 +18,8 @@ import {
 import { GoSearch } from "react-icons/go";
 import { FaRegFrownOpen } from "react-icons/fa";
 import { getAllHistories } from "@/services/history";
+import { getAllStations } from "@/services/station";
+import { Station } from "@/dto/station.dto";
 
 let historyData = [];
 
@@ -35,11 +37,19 @@ function History() {
   const [searchField, setSearchField] = useState("");
   const [filterByPrice, setFilterByPrice] = useState("");
   const [filterByDate, setFilterByDate] = useState("");
+  const [filterByStation, setFilterByStation] = useState("");
   const [histories, setHistories] = useState<History[]>([]);
+  const [stations, setStations] = useState<Station[]>([]);
 
   useEffect(() => {
     handleAllHistories();
+    handleAllStations();
   }, []);
+
+  const handleAllStations = async () => {
+    const res = await getAllStations();
+    setStations(res.value);
+  };
 
   const handleAllHistories = async () => {
     const histories = await getAllHistories();
@@ -68,6 +78,17 @@ function History() {
       historyData = histories;
     }
   }, [searchField]);
+
+  useMemo(() => {
+    if (filterByStation) {
+      const tableFiltered = histories.filter((history) =>
+        history.posto.nome.toLowerCase().includes(filterByStation.toLowerCase())
+      );
+      historyData = tableFiltered;
+    } else {
+      historyData = histories;
+    }
+  }, [filterByStation]);
 
   function comparePrice(a, b) {
     if (a.valorTotal < b.valorTotal) return -1;
@@ -130,14 +151,14 @@ function History() {
             <GoSearch size={20} color={`${theme.colors.lightBlack.main}`} />
           </InputRightElement>
           <Input
-            placeholder="Buscar histórico por usuário ou posto"
+            placeholder="Buscar histórico por posto"
             color={`${theme.colors.lightBlack.main}`}
             onChange={(e) => setSearchField(e.target.value)}
             fontSize={14}
           />
         </InputGroup>
         <Select
-          placeholder="Posto"
+          placeholder="Selecione o Posto"
           borderRadius={"5"}
           width={"20%"}
           size={"md"}
@@ -146,11 +167,12 @@ function History() {
           borderWidth={0}
           backgroundColor={`${theme.colors.white.main}`}
           color={`${theme.colors.lightBlack.main}`}
-          onChange={(e) => setFilterByPrice(e.target.value)}
+          onChange={(e) => setFilterByStation(e.target.value)}
           fontSize={14}
         >
-          <option value="Mais Caro">Mais Caro</option>
-          <option value="Mais Barato">Mais Barato</option>
+          {stations?.map((s) => {
+            return <option value={s.station.nome}>{s.station.nome}</option>;
+          })}
         </Select>
         <Select
           placeholder="Custo"
