@@ -21,7 +21,7 @@ import { getAllHistories } from "@/services/history";
 import { getAllStations } from "@/services/station";
 import { Station } from "@/dto/station.dto";
 
-let historyData = [];
+let historyData: any[] = [];
 
 const THeadData = [
   "Eletroposto",
@@ -70,7 +70,7 @@ function History() {
 
   useMemo(() => {
     if (searchField) {
-      const tableFiltered = histories.filter((history) =>
+      const tableFiltered = histories.filter((history: any) =>
         history.posto.nome.toLowerCase().includes(searchField.toLowerCase())
       );
       historyData = tableFiltered;
@@ -81,8 +81,8 @@ function History() {
 
   useMemo(() => {
     if (filterByStation) {
-      const tableFiltered = histories.filter((history) =>
-        history.posto.nome.toLowerCase().includes(filterByStation.toLowerCase())
+      const tableFiltered = histories.filter((history: any) =>
+        history?.posto.nome.toLowerCase().includes(filterByStation.toLowerCase())
       );
       historyData = tableFiltered;
     } else {
@@ -90,7 +90,7 @@ function History() {
     }
   }, [filterByStation]);
 
-  function comparePrice(a, b) {
+  function comparePrice(a: { valorTotal: number; }, b: { valorTotal: number; }) {
     if (a.valorTotal < b.valorTotal) return -1;
     if (a.valorTotal > b.valorTotal) return 1;
     return 0;
@@ -102,16 +102,15 @@ function History() {
     else historyData = historyData.sort(comparePrice);
   }, [filterByPrice]);
 
-  function sortByOldest(a, b) {
-    const dataEntradaA = new Date(a.horarioEntrada);
-    const dataEntradaB = new Date(b.horarioSaida);
+  function sortByOldest(a: any, b: any) {
+    const dataEntradaA = new Date(a.horarioEntrada).getTime();
+    const dataEntradaB = new Date(b.horarioEntrada).getTime();
     return dataEntradaA - dataEntradaB;
   }
-
-  function sortByNewest(a, b) {
-    const dataEntradaA = new Date(a.horarioEntrada);
-    const dataEntradaB = new Date(b.horarioSaida);
-    return dataEntradaB - dataEntradaA;
+  function sortByNewest(a: any, b: any) {
+    const dataEntradaA = new Date(a.horarioEntrada).getTime();
+    const dataEntradaB = new Date(b.horarioEntrada).getTime();
+    return dataEntradaA - dataEntradaB;
   }
 
   useMemo(() => {
@@ -170,8 +169,8 @@ function History() {
           onChange={(e) => setFilterByStation(e.target.value)}
           fontSize={14}
         >
-          {stations?.map((s) => {
-            return <option value={s.station.nome}>{s.station.nome}</option>;
+          {stations?.map((s: any, index: any) => {
+            return <option key={`${s.station}-${index}`} value={s.station.nome}>{s.station.nome}</option>;
           })}
         </Select>
         <Select
