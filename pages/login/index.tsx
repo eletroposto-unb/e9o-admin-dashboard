@@ -41,7 +41,7 @@ function Login() {
 
   const handleDownload = () => {
     const fileUrl =
-      "https://drive.google.com/file/d/1fsB-WmLIQhH3lwBZ4O7sRU3Tivyw-MOZ/view?usp=sharing";
+      "https://drive.google.com/file/d/15VzwBPikYGK-v9FkUbzoPftnjEY_nau2/view?usp=sharing";
     window.open(fileUrl);
   };
 
@@ -57,7 +57,7 @@ function Login() {
           direction="column"
           bg={theme.colors.background.main}
           p={12}
-          w={400}
+          w={[300, 400, 500]}
           rounded={6}
         >
           <Image

@@ -67,7 +67,8 @@ function Postos() {
   const [searchStatus, setSearchStatus] = useState<string>("");
   const [searchLocation, setSearchLocation] = useState<string>("");
   const [selectedStation, setSelectedStation] = useState<number | null>();
-  const [embeddedStation, setEmbeddedStation] = useState<FirestoreStation | null>();
+  const [embeddedStation, setEmbeddedStation] =
+    useState<FirestoreStation | null>();
 
   useEffect(() => {
     handleAllStation();
@@ -80,20 +81,26 @@ function Postos() {
   };
 
   useMemo(() => {
-    const filteredResult = stations.filter((s) => s?.station.nome.toLowerCase().includes(searchField));
+    const filteredResult = stations.filter((s) =>
+      s?.station.nome.toLowerCase().includes(searchField)
+    );
     setStations(filteredResult);
     if (!searchField) handleAllStation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchField]);
 
   useMemo(() => {
-    const filteredResult = tempStations.filter((s) => s?.station?.statusFuncionamento == searchStatus);
+    const filteredResult = tempStations.filter(
+      (s) => s?.station?.statusFuncionamento == searchStatus
+    );
     setStations(filteredResult);
     if (!searchStatus) handleAllStation();
   }, [searchStatus]);
 
   useMemo(() => {
-    const filteredResult = tempStations.filter((s) => s?.address?.comodidade == searchLocation);
+    const filteredResult = tempStations.filter(
+      (s) => s?.address?.comodidade == searchLocation
+    );
     setStations(filteredResult);
     if (!searchLocation) handleAllStation();
   }, [searchLocation]);
@@ -111,7 +118,8 @@ function Postos() {
       toast({
         id: "delete-station-error",
         title: "Alerta!",
-        description: "Erro na deleção da Estação de Carregamento. Tente novamente!",
+        description:
+          "Erro na deleção da Estação de Carregamento. Tente novamente!",
         status: "warning",
       });
     }
@@ -120,11 +128,22 @@ function Postos() {
 
   useEffect(() => {
     if (selectedStation !== undefined) {
-      const unsub = onSnapshot(doc(firestore, "station", (1).toString()), (doc) => {
-        const data = doc.data() as FirestoreStation;
-        console.log('firestore', data);
-        setEmbeddedStation({ ...data, charge_start_time: data.charge_start_time !== "" ? new Date(doc.data()?.charge_start_time.toDate()).toLocaleString() : "" });
-      });
+      const unsub = onSnapshot(
+        doc(firestore, "station", (1).toString()),
+        (doc) => {
+          const data = doc.data() as FirestoreStation;
+          console.log("firestore", data);
+          setEmbeddedStation({
+            ...data,
+            charge_start_time:
+              data.charge_start_time !== ""
+                ? new Date(
+                    doc.data()?.charge_start_time.toDate()
+                  ).toLocaleString()
+                : "",
+          });
+        }
+      );
 
       return () => {
         unsub();
@@ -142,7 +161,13 @@ function Postos() {
 
   const NoStationsComponent = (): JSX.Element => {
     return (
-      <Flex width={"100%"} justifyContent={"center"} flexDirection={"column"} alignItems={"center"} padding={"5% 0%"}>
+      <Flex
+        width={"100%"}
+        justifyContent={"center"}
+        flexDirection={"column"}
+        alignItems={"center"}
+        padding={"5% 0%"}
+      >
         <FaRegFrownOpen size={65} color={`${theme.colors.primary.main}`} />
         <Text fontSize={24}>Nenhum posto encontrado!</Text>
         <Text fontSize={14}>Cadastre o primeiro posto agora mesmo.</Text>
@@ -156,7 +181,11 @@ function Postos() {
         <Text display={"flex"} alignItems={"center"}>
           <Text>{status}</Text>
           {status === "disponivel" ? (
-            <AiFillCheckCircle size={20} color="green" style={{ marginLeft: 5 }} />
+            <AiFillCheckCircle
+              size={20}
+              color="green"
+              style={{ marginLeft: 5 }}
+            />
           ) : status === "em manutencao" ? (
             <GrVmMaintenance size={20} color="red" style={{ marginLeft: 5 }} />
           ) : (
@@ -170,11 +199,23 @@ function Postos() {
   return (
     <Flex w="100%" h="80vh" flexDir="column">
       <Flex flexDirection={"row"}>
-        <InputGroup width={"40%"} mr={"1"} size={"md"} borderRadius={"5"} borderWidth={0} backgroundColor={`${theme.colors.white.main}`}>
+        <InputGroup
+          width={"40%"}
+          mr={"1"}
+          size={"md"}
+          borderRadius={"5"}
+          borderWidth={0}
+          backgroundColor={`${theme.colors.white.main}`}
+        >
           <InputRightElement className="InputLeft" pointerEvents="none">
             <GoSearch size={20} color={`${theme.colors.lightBlack.main}`} />
           </InputRightElement>
-          <Input placeholder="Buscar postos" color={`${theme.colors.lightBlack.main}`} onChange={(e) => setSearchField(e.target.value)} fontSize={14} />
+          <Input
+            placeholder="Buscar postos"
+            color={`${theme.colors.lightBlack.main}`}
+            onChange={(e) => setSearchField(e.target.value)}
+            fontSize={14}
+          />
         </InputGroup>
         <Select
           placeholder="Selecionar Status"
@@ -235,7 +276,13 @@ function Postos() {
       </Flex>
       <Flex width={"100%"} marginTop={3}>
         {stations?.length >= 1 ? (
-          <TableContainer width={"100%"} paddingY={5} paddingX={3} borderRadius={10} backgroundColor={`${theme.colors.white.main}`}>
+          <TableContainer
+            width={"100%"}
+            paddingY={5}
+            paddingX={3}
+            borderRadius={10}
+            backgroundColor={`${theme.colors.white.main}`}
+          >
             <Table size="sm">
               <Thead>
                 {THeadData.map((name, index) => {
@@ -256,12 +303,25 @@ function Postos() {
                       {HandleStationStatus(s?.station.statusFuncionamento)}
                       <Td display={"flex"} justifyContent={"flex-end"}>
                         <Flex gap={2}>
-                          <Tooltip label="Visualizar Posto" aria-label="Visualizar Posto" justifyContent={"center"}>
+                          <Tooltip
+                            label="Visualizar Posto"
+                            aria-label="Visualizar Posto"
+                            justifyContent={"center"}
+                          >
                             <button>
-                              <AiOutlineEye onClick={() => handleStationVisualization(index)} size={22} color={`${theme.colors.black.main}`} />
+                              <AiOutlineEye
+                                onClick={() =>
+                                  handleStationVisualization(index)
+                                }
+                                size={22}
+                                color={`${theme.colors.black.main}`}
+                              />
                             </button>
                           </Tooltip>
-                          <Tooltip label="Editar Posto" aria-label="Editar Posto">
+                          <Tooltip
+                            label="Editar Posto"
+                            aria-label="Editar Posto"
+                          >
                             <button>
                               <FiEdit
                                 onClick={() =>
@@ -277,9 +337,18 @@ function Postos() {
                               />
                             </button>
                           </Tooltip>
-                          <Tooltip label="Excluir Posto" aria-label="Excluir Posto">
+                          <Tooltip
+                            label="Excluir Posto"
+                            aria-label="Excluir Posto"
+                          >
                             <button>
-                              <MdOutlineDeleteOutline onClick={() => handleDeleteStation(s.station.idPosto)} size={21} color={`${theme.colors.black.main}`} />
+                              <MdOutlineDeleteOutline
+                                onClick={() =>
+                                  handleDeleteStation(s.station.idPosto)
+                                }
+                                size={21}
+                                color={`${theme.colors.black.main}`}
+                              />
                             </button>
                           </Tooltip>
                         </Flex>
@@ -294,90 +363,173 @@ function Postos() {
           <NoStationsComponent />
         )}
       </Flex>
-      <Modal isOpen={selectedStation !== undefined} onClose={handleStationModalClose} isCentered>
+      <Modal
+        isOpen={selectedStation !== undefined}
+        onClose={handleStationModalClose}
+        isCentered
+      >
         <ModalOverlay />
-        <ModalContent backgroundColor={`${theme.colors.white.main}`} paddingBottom={10}>
+        <ModalContent
+          backgroundColor={`${theme.colors.white.main}`}
+          paddingBottom={10}
+        >
           <ModalHeader>{`Totem posto ${selectedStation! + 1}`}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Flex direction={"column"} gap={3} fontSize={18}>
               <Flex direction={"row"} gap={2} alignItems={"center"}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Status
                 </Text>
-                <Text color={`${theme.colors.totemData.main}`} fontSize={14} fontWeight={700}>
+                <Text
+                  color={`${theme.colors.totemData.main}`}
+                  fontSize={14}
+                  fontWeight={700}
+                >
                   {embeddedStation?.status}
                 </Text>
               </Flex>
               <Flex direction={"row"} gap={2} alignItems={"center"}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Temperatura da bateria
                 </Text>
-                <Text color={`${theme.colors.totemData.main}`} fontSize={14} fontWeight={700}>
+                <Text
+                  color={`${theme.colors.totemData.main}`}
+                  fontSize={14}
+                  fontWeight={700}
+                >
                   {`${embeddedStation?.battery_temperature} °C`}
                 </Text>
               </Flex>
               <Flex direction={"row"} gap={2} alignItems={"center"}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Voltagem da bateria
                 </Text>
-                <Text color={`${theme.colors.totemData.main}`} fontSize={14} fontWeight={700}>
+                <Text
+                  color={`${theme.colors.totemData.main}`}
+                  fontSize={14}
+                  fontWeight={700}
+                >
                   {`${embeddedStation?.battery_voltage} V`}
                 </Text>
               </Flex>
               <Flex direction={"row"} gap={2} alignItems={"center"}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Corrente da bateria
                 </Text>
-                <Text color={`${theme.colors.totemData.main}`} fontSize={14} fontWeight={700}>
-                  {`${embeddedStation?.battery_current !== undefined ? embeddedStation?.battery_current : 0} A`}
+                <Text
+                  color={`${theme.colors.totemData.main}`}
+                  fontSize={14}
+                  fontWeight={700}
+                >
+                  {`${
+                    embeddedStation?.battery_current !== undefined
+                      ? embeddedStation?.battery_current
+                      : 0
+                  } A/h`}
                 </Text>
               </Flex>
               <Flex direction={"row"} gap={2} alignItems={"center"}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Corrente do inversor
                 </Text>
-                <Text color={`${theme.colors.totemData.main}`} fontSize={14} fontWeight={700}>
-                  {`${embeddedStation?.inverter_current} A`}
+                <Text
+                  color={`${theme.colors.totemData.main}`}
+                  fontSize={14}
+                  fontWeight={700}
+                >
+                  {`${embeddedStation?.inverter_current} mA`}
                 </Text>
               </Flex>
               <Flex direction={"row"} gap={2} alignItems={"center"}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Temperatura do totem
                 </Text>
-                <Text color={`${theme.colors.totemData.main}`} fontSize={14} fontWeight={700}>
+                <Text
+                  color={`${theme.colors.totemData.main}`}
+                  fontSize={14}
+                  fontWeight={700}
+                >
                   {`${embeddedStation?.totem_temperature} °C`}
                 </Text>
               </Flex>
               <Flex direction={"row"} gap={2} alignItems={"center"}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Umidade do totem
                 </Text>
-                <Text color={`${theme.colors.totemData.main}`} fontSize={14} fontWeight={700}>
+                <Text
+                  color={`${theme.colors.totemData.main}`}
+                  fontSize={14}
+                  fontWeight={700}
+                >
                   {`${embeddedStation?.totem_humidity} %`}
                 </Text>
               </Flex>
               <Flex direction={"row"} gap={2} alignItems={"center"}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Tempo de carregamento
                 </Text>
-                <Text color={`${theme.colors.totemData.main}`} fontSize={14} fontWeight={700}>
+                <Text
+                  color={`${theme.colors.totemData.main}`}
+                  fontSize={14}
+                  fontWeight={700}
+                >
                   {`${embeddedStation?.charge_time} minutos`}
                 </Text>
               </Flex>
               <Flex direction={"row"} gap={2} alignItems={"center"}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
-                  Horario de início de carregamento
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
+                  Horário de início de carregamento
                 </Text>
-                <Text color={`${theme.colors.totemData.main}`} fontSize={14} fontWeight={700}>
-                  {embeddedStation?.charge_start_time}
+                <Text
+                  color={`${theme.colors.totemData.main}`}
+                  fontSize={14}
+                  fontWeight={700}
+                >
+                  {embeddedStation?.charge_start_time
+                    ? embeddedStation?.charge_start_time
+                    : "Não iniciado"}
                 </Text>
               </Flex>
               <Flex direction={"row"} gap={2} alignItems={"center"}>
-                <Text color={theme.fonts.modalLabel.color} fontSize={theme.fonts.modalLabel.size}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
                   Carregando
                 </Text>
-                <Text color={`${theme.colors.totemData.main}`} fontSize={14} fontWeight={700}>
+                <Text
+                  color={`${theme.colors.totemData.main}`}
+                  fontSize={14}
+                  fontWeight={700}
+                >
                   {embeddedStation?.charge ? "Sim" : "Não"}
                 </Text>
               </Flex>
