@@ -56,6 +56,8 @@ interface FirestoreStation {
   status?: string;
   totem_temperature?: number;
   totem_humidity?: number;
+  battery_potency?: number;
+  inverter_potency?: number;
 }
 
 function Postos() {
@@ -439,6 +441,44 @@ function Postos() {
                       ? embeddedStation?.battery_current
                       : 0
                   } A/h`}
+                </Text>
+              </Flex>
+              <Flex direction={"row"} gap={2} alignItems={"center"}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
+                  Potência da bateria
+                </Text>
+                <Text
+                  color={`${theme.colors.totemData.main}`}
+                  fontSize={14}
+                  fontWeight={700}
+                >
+                  {`${
+                    embeddedStation?.battery_potency !== undefined
+                      ? embeddedStation?.battery_potency
+                      : 0
+                  } W`}
+                </Text>
+              </Flex>
+              <Flex direction={"row"} gap={2} alignItems={"center"}>
+                <Text
+                  color={theme.fonts.modalLabel.color}
+                  fontSize={theme.fonts.modalLabel.size}
+                >
+                  Potência do Inversor
+                </Text>
+                <Text
+                  color={`${theme.colors.totemData.main}`}
+                  fontSize={14}
+                  fontWeight={700}
+                >
+                  {`${
+                    embeddedStation?.inverter_potency !== undefined
+                      ? embeddedStation?.inverter_potency
+                      : 0
+                  } W`}
                 </Text>
               </Flex>
               <Flex direction={"row"} gap={2} alignItems={"center"}>
