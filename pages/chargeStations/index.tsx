@@ -122,7 +122,8 @@ function Postos() {
     if (selectedStation !== undefined) {
       const unsub = onSnapshot(doc(firestore, "station", (1).toString()), (doc) => {
         const data = doc.data() as FirestoreStation;
-        setEmbeddedStation({ ...data, charge_start_time: data.charge_start_time !== undefined ? new Date(doc.data()?.charge_start_time.toDate()).toLocaleString() : undefined });
+        console.log('firestore', data);
+        setEmbeddedStation({ ...data, charge_start_time: data.charge_start_time !== "" ? new Date(doc.data()?.charge_start_time.toDate()).toLocaleString() : "" });
       });
 
       return () => {
