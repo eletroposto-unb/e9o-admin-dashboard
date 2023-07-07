@@ -39,6 +39,12 @@ function Login() {
       });
   };
 
+  const handleDownload = () => {
+    const fileUrl =
+      "https://drive.google.com/file/d/1fsB-WmLIQhH3lwBZ4O7sRU3Tivyw-MOZ/view?usp=sharing";
+    window.open(fileUrl);
+  };
+
   return (
     <Flex
       height="100vh"
@@ -96,6 +102,20 @@ function Login() {
           </Button>
         </Flex>
       </form>
+      <Text
+        position={"absolute"}
+        bottom={20}
+        color={theme.colors.secundary.main}
+      >
+        Clique{" "}
+        <span
+          style={{ fontWeight: "bold", cursor: "pointer" }}
+          onClick={handleDownload}
+        >
+          aqui
+        </span>{" "}
+        para baixar o aplicativo android.
+      </Text>
     </Flex>
   );
 }
