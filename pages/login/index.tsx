@@ -33,6 +33,7 @@ function Login() {
             id,
             title: error.message,
             status: "error",
+            variant: "left-accent",
           });
         }
       });

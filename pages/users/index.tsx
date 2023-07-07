@@ -306,8 +306,8 @@ const Usuarios = () => {
             paddingX={3}
             backgroundColor={`${theme.colors.white.main}`}
             sx={{
-              overflowY: users.length >= 6 && "scroll",
-              height: "auto",
+              overflowY: users?.length >= 10 && "scroll",
+              height: users?.length >= 10 ? "70vh" : "auto",
             }}
           >
             <Table variant="simple" size="sm">

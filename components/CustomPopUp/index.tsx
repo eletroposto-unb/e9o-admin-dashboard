@@ -17,13 +17,15 @@ const CustomPopup = ({ currentStation }: any): JSX.Element => {
   return (
     <Popup>
       <Flex
-        width={"300px"}
-        height={"230px"}
-        flexDirection={"column"}
+        width={"auto"}
+        height={"auto"}
+        flexDirection={"row"}
         alignItems={"center"}
+        justifyContent={"center"}
+        gap={5}
       >
         <Text fontWeight={"bold"}>{currentStation.station.nome}</Text>
-        <p>
+        <Text>
           {" "}
           <span style={{ display: "block" }}>
             {currentStation.station.descricao}
@@ -55,16 +57,7 @@ const CustomPopup = ({ currentStation }: any): JSX.Element => {
           >
             {handleStatus(currentStation.station.statusFuncionamento)}
           </span>
-        </p>
-        <Button
-          padding={"5% 5%"}
-          backgroundColor={`${theme.colors.primary.main}`}
-          color={`${theme.colors.white.main}`}
-          fontSize={12}
-          maxH={8}
-        >
-          Detalhes do posto <FiArrowRight size={20} style={{ marginLeft: 5 }} />
-        </Button>
+        </Text>
       </Flex>
     </Popup>
   );

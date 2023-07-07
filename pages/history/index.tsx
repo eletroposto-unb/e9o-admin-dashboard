@@ -82,7 +82,9 @@ function History() {
   useMemo(() => {
     if (filterByStation) {
       const tableFiltered = histories.filter((history: any) =>
-        history?.posto.nome.toLowerCase().includes(filterByStation.toLowerCase())
+        history?.posto.nome
+          .toLowerCase()
+          .includes(filterByStation.toLowerCase())
       );
       historyData = tableFiltered;
     } else {
@@ -90,7 +92,7 @@ function History() {
     }
   }, [filterByStation]);
 
-  function comparePrice(a: { valorTotal: number; }, b: { valorTotal: number; }) {
+  function comparePrice(a: { valorTotal: number }, b: { valorTotal: number }) {
     if (a.valorTotal < b.valorTotal) return -1;
     if (a.valorTotal > b.valorTotal) return 1;
     return 0;
@@ -103,14 +105,15 @@ function History() {
   }, [filterByPrice]);
 
   function sortByOldest(a: any, b: any) {
-    const dataEntradaA = new Date(a.horarioEntrada).getTime();
-    const dataEntradaB = new Date(b.horarioEntrada).getTime();
-    return dataEntradaA - dataEntradaB;
+    const dataEntradaA = new Date(a.horarioEntrada);
+    const dataEntradaB = new Date(b.horarioSaida);
+    return Number(dataEntradaA) - Number(dataEntradaB);
   }
+
   function sortByNewest(a: any, b: any) {
-    const dataEntradaA = new Date(a.horarioEntrada).getTime();
-    const dataEntradaB = new Date(b.horarioEntrada).getTime();
-    return dataEntradaA - dataEntradaB;
+    const dataEntradaA = new Date(a.horarioEntrada);
+    const dataEntradaB = new Date(b.horarioSaida);
+    return Number(dataEntradaB) - Number(dataEntradaA);
   }
 
   useMemo(() => {
@@ -170,7 +173,11 @@ function History() {
           fontSize={14}
         >
           {stations?.map((s: any, index: any) => {
-            return <option key={`${s.station}-${index}`} value={s.station.nome}>{s.station.nome}</option>;
+            return (
+              <option key={`${s.station}-${index}`} value={s.station.nome}>
+                {s.station.nome}
+              </option>
+            );
           })}
         </Select>
         <Select
@@ -214,6 +221,10 @@ function History() {
             paddingX={3}
             borderRadius={10}
             backgroundColor={`${theme.colors.white.main}`}
+            sx={{
+              overflowY: historyData?.length >= 10 && "scroll",
+              height: historyData?.length >= 10 ? "70vh" : "auto",
+            }}
           >
             <Table size="sm">
               <Thead>
