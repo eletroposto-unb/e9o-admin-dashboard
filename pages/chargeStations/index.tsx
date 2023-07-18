@@ -424,7 +424,7 @@ function Postos() {
                   {`${embeddedStation?.battery_voltage} V`}
                 </Text>
               </Flex>
-              <Flex direction={"row"} gap={2} alignItems={"center"}>
+              {/* <Flex direction={"row"} gap={2} alignItems={"center"}>
                 <Text
                   color={theme.fonts.modalLabel.color}
                   fontSize={theme.fonts.modalLabel.size}
@@ -442,8 +442,8 @@ function Postos() {
                       : 0
                   } A/h`}
                 </Text>
-              </Flex>
-              <Flex direction={"row"} gap={2} alignItems={"center"}>
+              </Flex> */}
+              {/* <Flex direction={"row"} gap={2} alignItems={"center"}>
                 <Text
                   color={theme.fonts.modalLabel.color}
                   fontSize={theme.fonts.modalLabel.size}
@@ -461,7 +461,7 @@ function Postos() {
                       : 0
                   } W`}
                 </Text>
-              </Flex>
+              </Flex> */}
               <Flex direction={"row"} gap={2} alignItems={"center"}>
                 <Text
                   color={theme.fonts.modalLabel.color}
@@ -538,7 +538,12 @@ function Postos() {
                   fontSize={14}
                   fontWeight={700}
                 >
-                  {`${embeddedStation?.charge_time} minutos`}
+                  {`${
+                    embeddedStation?.charge_start_time &&
+                    embeddedStation?.charge_time
+                      ? "minutos"
+                      : "Não iniciado"
+                  }`}
                 </Text>
               </Flex>
               <Flex direction={"row"} gap={2} alignItems={"center"}>
